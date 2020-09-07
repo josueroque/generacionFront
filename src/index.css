@@ -11,3 +11,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.H2Componente{
+  /* color: blue; */
+  margin-left: 40vw;
+  margin-top: 5vw;
+}
+
+.DivSubirArchivo{
+  margin-left: 10vw;
+}
+
+.Lista{
+  margin-left: 10vw !important ;
+  margin-right: 40vw !important;
+  margin-bottom :1vw !important ;
+}
+
+.Boton{
+  margin-right: 1vw !important;
+}
+
+.GridBoton{
+  margin-top: 1vw;
+}
+
+.Radio{
+  margin-left: 5vw !important ;
+  margin-bottom :1vw !important ;
+
+}
