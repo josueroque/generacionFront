@@ -18,6 +18,7 @@ import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';  
+import { format } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,18 +40,38 @@ function Archivo(props){
 
 
     useEffect(()=>{
-        console.log(archivo);
+       console.log(archivo[0]);
       },[archivo])
 
       useEffect(()=>{
-        console.log(scada);
+     //   console.log(scada);
       },[scada])
 
       const handleChange = (event) => {
-        console.log(event.target.value);
+       // console.log(event.target.value);
         actualizaScada(event.target.value);
       };
     
+      const wait=async(ms)=> {
+        return new Promise(resolve => {
+        setTimeout(resolve, ms);
+        });
+      }
+      
+      const guardarNuevo=async(archivoFile)=>{
+        console.log('desde funcion');
+        console.log(archivo.ruta);
+        await wait(1000);
+        const respuesta=  saveArchivo(archivoFile);
+        await wait(1000);
+        return respuesta;
+      }
+      
+      const tomarArchivo=(e)=> {
+          console.log(e.target.files);
+          actualizaArchivo(e.target.files);
+      }        
+
     return(
         <Fragment>
           <h2 className="H2Componente">SUBIR ARCHIVO EXCEL</h2>
@@ -58,11 +79,26 @@ function Archivo(props){
           <form
             onSubmit={e=>{
               e.preventDefault();
-
-              let newArchivo={
-
-
+              let archivoCreado={
+                ruta:archivo,
+                scada,
+                fecha
               }
+              console.log(archivo[0]);
+             // let objetoArchivo=URL.createObjectURL(archivo[0]);
+             // console.log(objetoArchivo);
+             let fechaConFormato= format(
+              new Date(archivoCreado.fecha),
+              'dd/MM/yyyy'
+            )
+              let Archivo=new FormData();
+              Archivo.append('ruta',archivo[0]);
+              Archivo.append('fecha',   fechaConFormato);
+              Archivo.append('SCADA',archivoCreado.scada);
+              
+            const respuesta=  guardarNuevo(Archivo);
+            console.log(respuesta);
+
             }}
           >
           <FormGroup>
@@ -107,7 +143,7 @@ function Archivo(props){
                     id="contained-button-file"
                     multiple
                     type="file"
-                    onChange={e=>actualizaArchivo(e.target.value)}
+                    onChange={e=>actualizaArchivo(e.target.files)}
                     
                   />
                   <label htmlFor="contained-button-file">
@@ -118,7 +154,7 @@ function Archivo(props){
               </FormControl>
 
             <Grid container justify="center" className="GridBoton">
-                <Button className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
+                <Button onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
                 <Button className="Boton" type="submit" variant="contained" color="primary">    Aplicar Archivo  </Button>
             </Grid>           
 

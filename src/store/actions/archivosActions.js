@@ -12,7 +12,7 @@ export const saveArchivoSuccess=archivo=>({
     payload:archivo
 });
 
-export const startEditArchivo = () => ({
+export const startSaveArchivo = () => ({
     type: START_SAVE_ARCHIVO
 });
 
@@ -23,14 +23,20 @@ export const saveArchivoFailure = (error) => ({
 
 export function saveArchivoAction(archivo){
     return async (dispatch) =>{
-        try {
+        dispatch(startSaveArchivo());
+   //     try {
+            console.log('desde action');
+            for (var pair of archivo.entries())
+            {
+             console.log(pair[0]+ ', '+ pair[1]); 
+            }
             await guardarArchivo(archivo);
             dispatch(saveArchivoSuccess(archivo));
-
-        } catch (error) {
-            console.log(error);
-            dispatch(guardarArchivo(error));
-        }
+           
+        // } catch (error) {
+        //   //  console.log(error);
+        //     dispatch(saveArchivoFailure(error));
+        // }
     }
 
 };
