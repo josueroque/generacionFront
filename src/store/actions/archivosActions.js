@@ -24,19 +24,17 @@ export const saveArchivoFailure = (error) => ({
 export function saveArchivoAction(archivo){
     return async (dispatch) =>{
         dispatch(startSaveArchivo());
-   //     try {
-            console.log('desde action');
-            for (var pair of archivo.entries())
-            {
-             console.log(pair[0]+ ', '+ pair[1]); 
-            }
-            await guardarArchivo(archivo);
-            dispatch(saveArchivoSuccess(archivo));
+       try {
+
+         const response=  await guardarArchivo(archivo);
+
+            console.log(response);
+            dispatch(saveArchivoSuccess(response.data));
            
-        // } catch (error) {
-        //   //  console.log(error);
-        //     dispatch(saveArchivoFailure(error));
-        // }
+        } catch (error) {
+          console.log(error);
+             dispatch(saveArchivoFailure(error));
+         }
     }
 
 };

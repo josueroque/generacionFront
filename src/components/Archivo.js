@@ -32,6 +32,7 @@ function Archivo(props){
     const dispatch=useDispatch();
     const classes = useStyles();
     const error=useSelector(state=>state.error);
+    const archivoGuardado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo) =>dispatch(saveArchivoAction(archivo));
     const [archivo,actualizaArchivo]=useState('value');
     const [fecha, actualizaFecha] = useState(null);
@@ -59,16 +60,17 @@ function Archivo(props){
       }
       
       const guardarNuevo=async(archivoFile)=>{
-        console.log('desde funcion');
-        console.log(archivo.ruta);
+      //  console.log('desde funcion');
+     //   console.log(archivo.ruta);
         await wait(1000);
         const respuesta=  saveArchivo(archivoFile);
         await wait(1000);
+        console.log(archivoGuardado);
         return respuesta;
       }
       
       const tomarArchivo=(e)=> {
-          console.log(e.target.files);
+        //  console.log(e.target.files);
           actualizaArchivo(e.target.files);
       }        
 
@@ -97,7 +99,7 @@ function Archivo(props){
               Archivo.append('SCADA',archivoCreado.scada);
               
             const respuesta=  guardarNuevo(Archivo);
-            console.log(respuesta);
+        //    console.log(respuesta);
 
             }}
           >

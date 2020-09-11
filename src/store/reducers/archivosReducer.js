@@ -19,18 +19,20 @@ export default function(state=initialState,action){
         case SAVE_ARCHIVO_SUCCESS:
         return{
             ...state,
-            archivo:{},
+            archivo:action.payload,
             loading:false,
             error:true,
-            errorInfo:action.payload
+            errorInfo:''
 
         }
         case SAVE_ARCHIVO_FAILURE:
             return{
                 ...state,
-                loading:true,
-                error:false,
-                errorInfo:''
+                archivo:{},
+                loading:false,
+                error:true,
+                errorInfo:'',
+                errorInfo:action.payload
             }
         default:
             return state;

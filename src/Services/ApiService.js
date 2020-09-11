@@ -32,13 +32,13 @@ export const  guardarArchivo= async (archivo) =>{
          };
       console.log('desde service');   
    
-      for (var pair of archivo.entries())
-      {
-       console.log(pair[0]+ ', '+ pair[1]); 
-      }
-      console.log(archivo);
+      // for (var pair of archivo.entries())
+      // {
+      //  console.log(pair[0]+ ', '+ pair[1]); 
+      // }
+    //  console.log(archivo);
       const response = await axios.post(requestUrl,archivo,config);
-      console.log(response);
+  //    console.log(response);
       return response;   
   
     } catch (err) {
