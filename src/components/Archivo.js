@@ -19,6 +19,12 @@ import IconButton from '@material-ui/core/IconButton';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';  
 import { format } from 'date-fns';
+import Loader from './Loader';
+import Menu from './Menu';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,17 +34,19 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
+  
 function Archivo(props){
     const dispatch=useDispatch();
     const classes = useStyles();
-    const error=useSelector(state=>state.error);
+    const error=useSelector(state=>state.archivos.error);
+    const loading=useSelector(state=>state.archivos.loading);
     const archivoGuardado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo) =>dispatch(saveArchivoAction(archivo));
     const [archivo,actualizaArchivo]=useState('value');
     const [fecha, actualizaFecha] = useState(null);
     const [scada,actualizaScada]=useState(true);
     const [id,actualizaId]=useState(null);
-
+    const [savedStatus,updateSavedStatus]=useState(false);
 
     useEffect(()=>{
        console.log(archivo[0]);
@@ -66,18 +74,30 @@ function Archivo(props){
         const respuesta=  saveArchivo(archivoFile);
         await wait(1000);
         console.log(archivoGuardado);
+        updateSavedStatus(true);
         return respuesta;
       }
       
       const tomarArchivo=(e)=> {
         //  console.log(e.target.files);
           actualizaArchivo(e.target.files);
+          updateSavedStatus(false);
       }        
 
     return(
+
+      
         <Fragment>
+         <Menu></Menu>
+
           <h2 className="H2Componente">SUBIR ARCHIVO EXCEL</h2>
           <br/>
+         
+          {loading===true?
+          <Fragment>
+              <Loader className="Loader"></Loader>
+              <h3 className="LoaderLabel">Procesando Archivo, espere por favor...</h3>
+           </Fragment>:
           <form
             onSubmit={e=>{
               e.preventDefault();
@@ -99,14 +119,14 @@ function Archivo(props){
               Archivo.append('SCADA',archivoCreado.scada);
               
             const respuesta=  guardarNuevo(Archivo);
-        //    console.log(respuesta);
+           console.log(respuesta);
 
             }}
           >
           <FormGroup>
           <FormControl  className={classes.formControl,"Lista"}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="left">
+            <Grid container >
             <KeyboardDatePicker
                 margin="normal"
                 id="date-picker-dialog"
@@ -158,11 +178,24 @@ function Archivo(props){
             <Grid container justify="center" className="GridBoton">
                 <Button onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
                 <Button className="Boton" type="submit" variant="contained" color="primary">    Aplicar Archivo  </Button>
-            </Grid>           
-
+                <br/>
+              </Grid>           
+                <div>   
+                    { savedStatus===true?
+                      <Alert className="Alert" severity={error===true?'error':'success'}>
+                        {error===true ? 'Sucedio un error al procesar el archivo, intentelo nuevamente mas tarde o notifiquelo al departamento de TI'
+                        :'Archivo procesado exitosamente!'}
+                      </Alert>
+                      :''  
+                    }
+                </div>
           </FormGroup>
+      
           </form>
+        }
+        
         </Fragment>
+        
     )
 };
 

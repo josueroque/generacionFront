@@ -21,7 +21,7 @@ export default function(state=initialState,action){
             ...state,
             archivo:action.payload,
             loading:false,
-            error:true,
+            error:false,
             errorInfo:''
 
         }
