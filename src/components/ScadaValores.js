@@ -4,16 +4,16 @@ import MaterialTable,{ MTableToolbar } from 'material-table';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
 import axios from 'axios';
 import Menu from './Menu';
-import { CSVLink } from 'react-csv';
 import { Grid,FormLabel,RadioGroup,Radio,FormControlLabel,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
-import { Button} from '@material-ui/core';
+import { Button} from '@material-ui/core'; 
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';  
 import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import ExportExcel from 'react-export-excel';
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
+  const ExcelFile=ExportExcel.ExcelFile;
+  const ExcelSheet=ExportExcel.ExcelSheet;
+  const ExcelColumn=ExportExcel.ExcelColumn;
+  
 function ScadaValores(props){
     const URL='http://localhost:53363/api/';
     const classes = useStyles();
@@ -35,6 +39,7 @@ function ScadaValores(props){
     const [idPlanta,updateIdPlanta]=useState(null);
     const [nombrePlanta,updateNombrePlanta]=useState("Todos");
 
+
     useEffect(()=>{
      
      getPlantas();       
@@ -45,6 +50,22 @@ function ScadaValores(props){
     // useEffect(()=>{
     //     setColumns();
     // },[plantas])
+    const ExportarExcelComponente= function(){
+        return(
+        <div>
+        <ExcelFile element={<button>Exportar a Excel</button> }fileName="GeneracionPorPlanta">
+            {data?
+                <ExcelSheet data={data} name="GeneracionPorPlanta">
+                {columns ? columns.map( dataItem=>
+                    <ExcelColumn label={dataItem.title} key={dataItem.title} value={dataItem.field} > </ExcelColumn>
+                        ):''}  
+                
+                </ExcelSheet>:''
+            }
+        </ExcelFile>
+      </div>   
+        )
+    }
 
     const setColumns= async function(){
         const columns2=[
@@ -167,9 +188,37 @@ function ScadaValores(props){
     }
     
 
+
+    async function exportarExcel(){
+        let columnas=[];
+        // let diccionario={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I',10:'J',11:'K',12:'L',13:'M',14:'N',15:'N',
+        //                     16:'O',17:'P',18:'Q',19:'R',20:'S',21:'T',22:'U',23:'V',24:'W',25:'X',26:'Y',27:'Z',28:'AA',
+        //                     29:'AB',30:'AC',31:'AD',32:'AF',33:'AG',34:'AH',35:'',36:'',37:'',38:'',39:'',40:'',41:'',
+        //                     42:'',43:'',44:'',45:'',46:'',47:'',48:'',49:'',50:'',51:'',52:'',53:'',54:'',55:'',
+        //                     56:'',57:'',58:'',59:'',60:'',61:'',62:'',63:'',64:'',65:'',66:'',67:'',68:'',
+        //                     69:'',70:'',71:'',72:'',73:'',74:'',75:'',76:'',77:'',78:'',79:'',80:'',81:'',
+        //                     82:'',83:'',84:'',85:'',86:'',87:'',88:'',89:'',90:'',91:'',92:'',93:'',94:'',
+        //                     95:'',96:'',97:'',98:'',99:'',100:'',101:'',102:'',103:'',104:'',105:'',106:'',
+        //                     107:'',108:'',109:'',110:''};
+        console.log (columns);
+        console.log(data);
+        var data=  {
+            cols: [{ name: "A", key: 0 }, { name: "B", key: 1 }, { name: "C", key: 2 }],
+            data: [
+              [ "id",    "name", "value" ],
+              [    1, "sheetjs",    7262 ],
+              [    2, "js-xlsx",    6969 ]
+            ]
+          };
+
+    }
+
      //console.log(data);
     // console.log(plantas);
     // console.log(fechas);
+
+    
+
     return(
       <Fragment>
           <Menu></Menu>
@@ -238,6 +287,8 @@ function ScadaValores(props){
         <Grid container justify="center" className="GridBoton">
                 <Button onClick={getData} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
+                <Button onClick={exportarExcel} className="Boton" type="submit" variant="contained" color="primary">   Exportar a excel  </Button>
+                <ExportarExcelComponente></ExportarExcelComponente>        
         </Grid>  
 
          <div className="MaterialTable">
@@ -252,15 +303,8 @@ function ScadaValores(props){
               
             :''}
          </div>
-
-         <Grid container justify="center" className="GridBoton">
-                {/* <Button onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button> */}
-                <Button variant="contained">
-                        <CSVLink data={data} filename='prueba excel.xls'>Export</CSVLink>
-                </Button>              
-                <br/>
-         </Grid>  
-
+            
+   
       </Fragment>
 
     );
