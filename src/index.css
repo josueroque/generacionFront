@@ -78,15 +78,25 @@ margin-left: 25vw;
   margin-top: 6vw;
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  margin-left: 20vw;
+  margin-left: 15vw;
 }
 
 .Fecha{
-  
+
  width: 25vw;
 }
 
 .Lista{
   /* width: 30vw; */
 
+}
+.H2ComponenteConsulta{
+ margin-left: 40vw;
+  margin-top: 6vw;
+  margin-bottom: -6vw;
+}
+
+.FormMantenimiento{
+  width: 30vw;
+  margin-left: 30vw;
 }

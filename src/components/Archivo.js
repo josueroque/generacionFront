@@ -177,7 +177,7 @@ function Archivo(props){
 
             <Grid container justify="center" className="GridBoton">
                 <Button onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
-                <Button className="Boton" type="submit" variant="contained" color="primary">    Aplicar Archivo  </Button>
+                {/* <Button className="Boton" type="submit" variant="contained" color="primary">    Aplicar Archivo  </Button> */}
                 <br/>
               </Grid>           
                 <div>   

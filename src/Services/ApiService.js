@@ -32,11 +32,7 @@ export const  guardarArchivo= async (archivo) =>{
          };
       console.log('desde service');   
    
-      // for (var pair of archivo.entries())
-      // {
-      //  console.log(pair[0]+ ', '+ pair[1]); 
-      // }
-    //  console.log(archivo);
+
       const response = await axios.post(requestUrl,archivo,config);
   //    console.log(response);
       return response;   
@@ -49,4 +45,67 @@ export const  guardarArchivo= async (archivo) =>{
      
     }
 }
+
+export async function obtenerSubestaciones(){  
+  try {
+    
+    const requestUrl =URL +'/subestaciones';
+    const response = await axios.get(requestUrl);
+     
+    if (response.statusText!=="OK") {
+        throw new Error('Error ');
+      }
+      return response; 
+    }
+  
+    catch(error){
+     console.error(error.response);
+     throw error;
+ }
+}
+
+export async function obtenerSubestacion(id){  
+  try {
+    
+    const requestUrl =URL +'/subestaciones/'+id;
+    const response = await axios.get(requestUrl);
+     
+    if (response.statusText!=="OK") {
+        throw new Error('Error ');
+      }
+      return response; 
+    }
+  
+    catch(error){
+     console.error(error.response);
+     throw error;
+ }
+}
+
+
+export const  guardarSubestacion= async (subestacion) =>{
+ try {
+    const requestUrl =URL +'/subestaciones';
+    const response = await axios.post(requestUrl,subestacion);
+    return response;   
+
+  } catch (err) {
+    console.error(err);   
+   
+  }
+}
+
+export const  editarSubestacion= async (subestacion) =>{
+  try {
+    
+     const requestUrl =URL +'/subestaciones/'+subestacion.id;
+     console.log(requestUrl);
+     const response = await axios.put(requestUrl,subestacion);
+     return response;   
+ 
+   } catch (err) {
+     console.error(err);   
+    
+   }
+ }
   

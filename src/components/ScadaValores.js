@@ -53,7 +53,7 @@ function ScadaValores(props){
     const ExportarExcelComponente= function(){
         return(
         <div>
-        <ExcelFile element={<button>Exportar a Excel</button> }fileName="GeneracionPorPlanta">
+        <ExcelFile element={<Button className="Boton" type="submit" variant="contained" color="primary">Exportar a Excel</Button> }fileName="GeneracionPorPlanta">
             {data?
                 <ExcelSheet data={data} name="GeneracionPorPlanta">
                 {columns ? columns.map( dataItem=>
@@ -84,7 +84,6 @@ function ScadaValores(props){
         
         updatePlantas(data2.data);
         return data2.data;
-
         
     }
     
@@ -111,7 +110,7 @@ function ScadaValores(props){
            fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
         }
         if (nombrePlanta){
-            console.log(nombrePlanta);
+          //  console.log(nombrePlanta);
             if (nombrePlanta!=='Todos'){
                 if (fecha1 || fecha2){
                     urlFiltros+='&NombrePlanta='+nombrePlanta;
@@ -121,7 +120,7 @@ function ScadaValores(props){
                 }
             }
         }
-        console.log(urlFiltros);
+      //  console.log(urlFiltros);
         const data2= await (axios.get(urlFiltros));
         const plantas2=[];
         const fechas2=[];
@@ -143,7 +142,7 @@ function ScadaValores(props){
       //  updatePlantas(plantas2);
       
         const dataCruzada=[];
-        console.log(data2.data);
+      //  console.log(data2.data);
         const horas=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
         
         for(let item3 of fechas2){
@@ -164,8 +163,6 @@ function ScadaValores(props){
                dataCruzada.push(auxiliar);
             }
            
-           // console.log(planta);
-
 
         }
 
@@ -181,47 +178,18 @@ function ScadaValores(props){
         
         updateColumns(columns2);
 
-        console.log(columns2);
-        console.log(dataCruzada);
+        // console.log(columns2);
+        // console.log(dataCruzada);
         updateData(dataCruzada);
         return dataCruzada;
     }
     
-
-
-    async function exportarExcel(){
-        let columnas=[];
-        // let diccionario={1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H',9:'I',10:'J',11:'K',12:'L',13:'M',14:'N',15:'N',
-        //                     16:'O',17:'P',18:'Q',19:'R',20:'S',21:'T',22:'U',23:'V',24:'W',25:'X',26:'Y',27:'Z',28:'AA',
-        //                     29:'AB',30:'AC',31:'AD',32:'AF',33:'AG',34:'AH',35:'',36:'',37:'',38:'',39:'',40:'',41:'',
-        //                     42:'',43:'',44:'',45:'',46:'',47:'',48:'',49:'',50:'',51:'',52:'',53:'',54:'',55:'',
-        //                     56:'',57:'',58:'',59:'',60:'',61:'',62:'',63:'',64:'',65:'',66:'',67:'',68:'',
-        //                     69:'',70:'',71:'',72:'',73:'',74:'',75:'',76:'',77:'',78:'',79:'',80:'',81:'',
-        //                     82:'',83:'',84:'',85:'',86:'',87:'',88:'',89:'',90:'',91:'',92:'',93:'',94:'',
-        //                     95:'',96:'',97:'',98:'',99:'',100:'',101:'',102:'',103:'',104:'',105:'',106:'',
-        //                     107:'',108:'',109:'',110:''};
-        console.log (columns);
-        console.log(data);
-        var data=  {
-            cols: [{ name: "A", key: 0 }, { name: "B", key: 1 }, { name: "C", key: 2 }],
-            data: [
-              [ "id",    "name", "value" ],
-              [    1, "sheetjs",    7262 ],
-              [    2, "js-xlsx",    6969 ]
-            ]
-          };
-
-    }
-
-     //console.log(data);
-    // console.log(plantas);
-    // console.log(fechas);
-
-    
-
+ 
     return(
       <Fragment>
           <Menu></Menu>
+
+          <h2 className="H2ComponenteConsulta">Generación Valores SCADA</h2>
           
           <FormGroup className="RangoFechas">
         
@@ -231,6 +199,7 @@ function ScadaValores(props){
     
                     <KeyboardDatePicker
                         margin="normal"
+                      
                         id="date-picker-dialog"
                         label="Fecha inicial"
                         format="dd/MM/yyyy"
@@ -280,14 +249,11 @@ function ScadaValores(props){
                 </Select>
              </FormControl>
 
-
-
         </FormGroup>
          
         <Grid container justify="center" className="GridBoton">
                 <Button onClick={getData} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
-                <Button onClick={exportarExcel} className="Boton" type="submit" variant="contained" color="primary">   Exportar a excel  </Button>
                 <ExportarExcelComponente></ExportarExcelComponente>        
         </Grid>  
 
@@ -298,7 +264,10 @@ function ScadaValores(props){
 
                 columns={columns}
                  data={data}
-                title="Generación Valores SCADA"
+                title=""
+                options={{
+                    exportButton: false
+                  }}
                 />
               
             :''}

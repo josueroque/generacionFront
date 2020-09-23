@@ -6,6 +6,8 @@ import Archivo from './Archivo';
 import ScadaValores from './ScadaValores';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from './Home';
+import Subestacion from './Subestacion';
+import SubestacionEditar from './SubestacionEditar';
 
 class App  extends Component {
 
@@ -22,6 +24,8 @@ class App  extends Component {
             {/* <Route exact path='/' component={Home}  /> */}
                 <Route exact path='/ScadaValores' component={ScadaValores}  /> 
                <Route exact path='/Archivo' component={Archivo}  />
+               <Route exact path='/Subestacion' component={Subestacion}  />
+               <Route exact path='/SubestacionEditar' component={SubestacionEditar}  />
                <Route exact path='/' component={Home}  />
           </Switch>
           

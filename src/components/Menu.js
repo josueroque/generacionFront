@@ -37,6 +37,7 @@ import Button from '@material-ui/core/Button';
 import Logo from '../img/ods.png';
 import Collapse from '@material-ui/core/Collapse';
 import Create from '@material-ui/icons/Create';
+import Add from '@material-ui/icons/Add';
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -211,7 +212,7 @@ export default function Menu() {
             </ListItem>
             <Collapse in={openNested} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-              <Link key='Subir' to={{pathname:`/general`}} className='LinkMenu'>  
+              <Link key='Subir' to={{pathname:`/archivo`}} className='LinkMenu'>  
                   <ListItem button className={classes.nested}>
                       <ListItemIcon>
                         <Publish />
@@ -247,20 +248,36 @@ export default function Menu() {
             </ListItem>
             <Collapse in={openNested2} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <Link key='Create2' to={{pathname:`/general`}}  className='LinkMenu'>  
+                <Link key='Create2' to={{pathname:`/Subestacion`}}  className='LinkMenu'>  
+                  <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <Add />
+                        </ListItemIcon>
+                        <ListItemText primary=" Crear Subestaciones" />
+                    </ListItem>
+                  </Link>
+                  <Link key='Edit1' to={{pathname:`/SubestacionEditar`}}  className='LinkMenu'>  
                   <ListItem button className={classes.nested}>
                       <ListItemIcon>
                         <Create />
                         </ListItemIcon>
-                        <ListItemText primary="Subestaciones" />
+                        <ListItemText primary="Editar Subestaciones" />
                     </ListItem>
                   </Link>
                 <Link key='Create4' to={{pathname:`/search`}}  className='LinkMenu'>    
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
+                      <Add />
+                    </ListItemIcon>
+                    <ListItemText primary="Crear Plantas" />
+                  </ListItem>
+                </Link>
+                <Link key='Edit2' to={{pathname:`/PlantasEditar`}}  className='LinkMenu'>    
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
                       <Create />
                     </ListItemIcon>
-                    <ListItemText primary="Plantas" />
+                    <ListItemText primary="Editar Plantas" />
                   </ListItem>
                 </Link>
               </List>
