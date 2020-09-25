@@ -92,11 +92,16 @@ margin-left: 25vw;
 }
 .H2ComponenteConsulta{
  margin-left: 40vw;
-  margin-top: 6vw;
+  margin-top: 7vw;
   margin-bottom: -6vw;
 }
 
 .FormMantenimiento{
   width: 30vw;
   margin-left: 30vw;
+}
+
+.GridBotonConsulta{
+  margin-top: 2vw;
+  margin-bottom: -5vw;
 }

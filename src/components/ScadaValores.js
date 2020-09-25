@@ -14,6 +14,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExportExcel from 'react-export-excel';
+
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
@@ -27,7 +28,8 @@ const useStyles = makeStyles(theme => ({
   const ExcelColumn=ExportExcel.ExcelColumn;
   
 function ScadaValores(props){
-    const URL='http://localhost:53363/api/';
+    //const URL='http://localhost:53363/api/';
+    const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
@@ -94,16 +96,16 @@ function ScadaValores(props){
     const getData=async function (){
         let Fecha1= format(
             new Date(fecha1),
-            'dd/MM/yyyy'
+            'MM/dd/yyyy'
           )
 
         let Fecha2= format(
             new Date(fecha2),
-            'dd/MM/yyyy'
+            'MM/dd/yyyy'
           )
 
         let urlFiltros=URL+'scadavalores/';
-        console.log(urlFiltros);
+    
         if (fecha1){
             urlFiltros+='filtro?FechaInicial='+Fecha1;
         }
@@ -121,7 +123,7 @@ function ScadaValores(props){
                 }
             }
         }
-      //  console.log(urlFiltros);
+        console.log(urlFiltros);
         const data2= await (axios.get(urlFiltros));
         const plantas2=[];
         const fechas2=[];
@@ -138,7 +140,9 @@ function ScadaValores(props){
                 fechas2.push(format(new Date(item2.fecha),'dd/MM/yyyy' ));
             }
         }
-        
+        console.log(fechas2);
+      //  fechas2.sort(function(o){ return new Date( o.date ) });
+        console.log(fechas2);
        updateFechas(fechas2);
       //  updatePlantas(plantas2);
       
@@ -150,6 +154,8 @@ function ScadaValores(props){
             
             for (let item4 of horas){
                 const valoresPlanta=data2.data.filter(function(dato){
+                    // console.log(dato.fecha);
+                    // console.log(new Date(dato.fecha),'dd/MM/yyyy');
                     return format(new Date(dato.fecha),'dd/MM/yyyy' ) ===item3 && dato.hora===item4 ;
                 });
 
@@ -168,7 +174,7 @@ function ScadaValores(props){
         }
 
         const columns2=[
-            { title: 'Fecha', field: 'fecha' },
+            { title: 'Fecha', field: 'fecha'},
             { title: 'Hora', field: 'hora' }
            
         ];
@@ -252,7 +258,7 @@ function ScadaValores(props){
 
         </FormGroup>
          
-        <Grid container justify="center" className="GridBoton">
+        <Grid container justify="center" className="GridBotonConsulta">
                 <Button onClick={getData} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
                 <ExportarExcelComponente></ExportarExcelComponente>        

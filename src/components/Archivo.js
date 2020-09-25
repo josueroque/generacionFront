@@ -3,7 +3,7 @@ import {useDispatch,useSelector} from 'react-redux';
 //import SideBar from './SideBar';
 //import { css } from '@emotion/core';
 import 'date-fns';
-import { saveArchivoAction,getArchivoAction } from '../store/actions/archivosActions';
+import { saveArchivoAction,getArchivoAction,deleteArchivoAction } from '../store/actions/archivosActions';
 import { Container } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
@@ -44,6 +44,7 @@ function Archivo(props){
     const archivoConsultado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo) =>dispatch(saveArchivoAction(archivo));
     const getArchivo=(fecha) =>dispatch(getArchivoAction(fecha));
+    const deleteArchivo=(id) =>dispatch(deleteArchivoAction(id));
     const [archivo,actualizaArchivo]=useState({});
     const [fecha, actualizaFecha] = useState(null);
     const [scada,actualizaScada]=useState(true);
@@ -58,6 +59,7 @@ function Archivo(props){
 
       useEffect(()=>{
         if (fecha) obtenerArchivo(fecha);
+        updateSavedStatus(false);
       },[fecha])
 
       useEffect(()=>{
@@ -81,7 +83,7 @@ function Archivo(props){
         await wait(1000);
         let fechaConFormato= format(
           new Date(fecha),
-          'dd/MM/yyyy'
+          'MM/dd/yyyy'
         )
       //  console.log(fechaConFormato.toString());
         const respuesta= getArchivo(fechaConFormato.toString());
@@ -122,7 +124,8 @@ function Archivo(props){
         //  console.log('desde funcion');
        //   console.log(archivo.ruta);
           await wait(1000);
-          const respuesta=  eliminarArchivo(archivoConsultado.id);
+          console.log(archivoConsultado);
+          const respuesta=  deleteArchivo(archivoConsultado.data.id);
           await wait(1000);
           console.log(respuesta);
           updateSavedStatus(true);
