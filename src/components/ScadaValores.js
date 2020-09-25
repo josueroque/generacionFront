@@ -69,7 +69,7 @@ function ScadaValores(props){
 
     const setColumns= async function(){
         const columns2=[
-            { title: 'Fecha', field: 'fecha' },
+            { title: 'Fecha1', field: 'fecha'  },
             { title: 'Hora', field: 'hora' }
            
         ];
@@ -94,12 +94,12 @@ function ScadaValores(props){
     const getData=async function (){
         let Fecha1= format(
             new Date(fecha1),
-            'MM/dd/yyyy'
+            'dd/MM/yyyy'
           )
 
-          let Fecha2= format(
+        let Fecha2= format(
             new Date(fecha2),
-            'MM/dd/yyyy'
+            'dd/MM/yyyy'
           )
 
         let urlFiltros=URL+'scadavalores/';
@@ -132,10 +132,10 @@ function ScadaValores(props){
                 plantas2.push(item.planta.rotulacionSCADA);
             }
         }
-
+        //format(new Date(fecha2),'dd/MM/yyyy' )
         for(let item2 of data2.data){
-            if (!fechas2.includes(item2.fecha)){
-                fechas2.push(item2.fecha);
+            if (!fechas2.includes(format(new Date(item2.fecha   ),'dd/MM/yyyy' ))){
+                fechas2.push(format(new Date(item2.fecha),'dd/MM/yyyy' ));
             }
         }
         
@@ -150,7 +150,7 @@ function ScadaValores(props){
             
             for (let item4 of horas){
                 const valoresPlanta=data2.data.filter(function(dato){
-                    return dato.fecha===item3 && dato.hora===item4 ;
+                    return format(new Date(dato.fecha),'dd/MM/yyyy' ) ===item3 && dato.hora===item4 ;
                 });
 
                 let auxiliar={};

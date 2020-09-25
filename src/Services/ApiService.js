@@ -2,10 +2,29 @@ import axios from 'axios';
 export const URL='http://localhost:53363/api';
 
 
-export async function obtenerArchivo(fecha){  
+export async function obtenerArchivoFecha(fecha){  
+    try {
+      console.log(fecha);
+      const requestUrl =URL +'/archivos/fecha?fecha='+fecha;
+      const response = await axios.get(requestUrl);
+       
+      if (response.statusText!=="OK") {
+          throw new Error('Error getting adverts');
+        }
+        
+        return response; 
+      }
+    
+      catch(error){
+       console.error(error.response);
+       throw error;
+   }
+  }
+
+  export async function obtenerArchivo(id){  
     try {
       
-      const requestUrl =URL +'/archivos/filtro?fecha='+fecha;
+      const requestUrl =URL +'/archivos/'+id;
       const response = await axios.get(requestUrl);
        
       if (response.statusText!=="OK") {
@@ -20,6 +39,23 @@ export async function obtenerArchivo(fecha){
    }
   }
 
+  export async function eliminarArchivo(id){  
+    try {
+      
+      const requestUrl =URL +'/archivos/'+id;
+      const response = await axios.delete(requestUrl);
+       
+      if (response.statusText!=="OK") {
+          throw new Error('Error eliminando archivo');
+        }
+        return response; 
+      }
+    
+      catch(error){
+       console.error(error.response);
+       throw error;
+   }
+  }
 
 export const  guardarArchivo= async (archivo) =>{
    try {
@@ -30,7 +66,7 @@ export const  guardarArchivo= async (archivo) =>{
               'content-type': 'multipart/form-data'
             }
          };
-      console.log('desde service');   
+      //console.log('desde service');   
    
 
       const response = await axios.post(requestUrl,archivo,config);
@@ -81,6 +117,7 @@ export async function obtenerSubestacion(id){
      throw error;
  }
 }
+
 
 
 export const  guardarSubestacion= async (subestacion) =>{

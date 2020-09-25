@@ -3,7 +3,7 @@ import {useDispatch,useSelector} from 'react-redux';
 //import SideBar from './SideBar';
 //import { css } from '@emotion/core';
 import 'date-fns';
-import { saveArchivoAction } from '../store/actions/archivosActions';
+import { saveArchivoAction,getArchivoAction } from '../store/actions/archivosActions';
 import { Container } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
@@ -40,21 +40,55 @@ function Archivo(props){
     const classes = useStyles();
     const error=useSelector(state=>state.archivos.error);
     const loading=useSelector(state=>state.archivos.loading);
-    const archivoGuardado=useSelector(state=>state.archivos.archivo);
+   // const archivoGuardado=useSelector(state=>state.archivos.archivo);
+    const archivoConsultado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo) =>dispatch(saveArchivoAction(archivo));
-    const [archivo,actualizaArchivo]=useState('value');
+    const getArchivo=(fecha) =>dispatch(getArchivoAction(fecha));
+    const [archivo,actualizaArchivo]=useState({});
     const [fecha, actualizaFecha] = useState(null);
     const [scada,actualizaScada]=useState(true);
     const [id,actualizaId]=useState(null);
     const [savedStatus,updateSavedStatus]=useState(false);
+    const [guardarDesactivado,actualizaGuardarDesactivado]=useState(false);
+    const [eliminarDesactivado,actualizaEliminarDesactivado]=useState(true);
 
     useEffect(()=>{
-       console.log(archivo[0]);
+    //   console.log(archivo[0]);
       },[archivo])
 
       useEffect(()=>{
-     //   console.log(scada);
-      },[scada])
+        if (fecha) obtenerArchivo(fecha);
+      },[fecha])
+
+      useEffect(()=>{
+        console.log(archivoConsultado);
+        if (archivoConsultado.request)
+          {
+            archivoConsultado.request.status===200 ? actualizaGuardarDesactivado(true):actualizaGuardarDesactivado(false);
+            archivoConsultado.request.status===200 ? actualizaEliminarDesactivado(false):actualizaEliminarDesactivado(true);
+          }
+        else
+          {
+            actualizaGuardarDesactivado(false);
+            actualizaEliminarDesactivado(true);
+          }
+       // actualizaArchivo(respuesta); 
+
+
+      },[archivoConsultado])
+
+      const obtenerArchivo=async(fecha)=>{
+        await wait(1000);
+        let fechaConFormato= format(
+          new Date(fecha),
+          'dd/MM/yyyy'
+        )
+      //  console.log(fechaConFormato.toString());
+        const respuesta= getArchivo(fechaConFormato.toString());
+        await wait(1000);
+
+        return respuesta;
+      }
 
       const handleChange = (event) => {
        // console.log(event.target.value);
@@ -73,7 +107,7 @@ function Archivo(props){
         await wait(1000);
         const respuesta=  saveArchivo(archivoFile);
         await wait(1000);
-        console.log(archivoGuardado);
+    //    console.log(archivoGuardado);
         updateSavedStatus(true);
         return respuesta;
       }
@@ -82,7 +116,18 @@ function Archivo(props){
         //  console.log(e.target.files);
           actualizaArchivo(e.target.files);
           updateSavedStatus(false);
-      }        
+      } 
+      
+      const eliminarArchivo=async()=>{
+        //  console.log('desde funcion');
+       //   console.log(archivo.ruta);
+          await wait(1000);
+          const respuesta=  eliminarArchivo(archivoConsultado.id);
+          await wait(1000);
+          console.log(respuesta);
+          updateSavedStatus(true);
+          return respuesta;
+        }
 
     return(
 
@@ -106,7 +151,7 @@ function Archivo(props){
                 scada,
                 fecha
               }
-              console.log(archivo[0]);
+              //console.log(archivo[0]);
              // let objetoArchivo=URL.createObjectURL(archivo[0]);
              // console.log(objetoArchivo);
              let fechaConFormato= format(
@@ -119,7 +164,7 @@ function Archivo(props){
               Archivo.append('SCADA',archivoCreado.scada);
               
             const respuesta=  guardarNuevo(Archivo);
-           console.log(respuesta);
+        //   console.log(respuesta);
 
             }}
           >
@@ -153,7 +198,7 @@ function Archivo(props){
                 onChange={handleChange}
               >
                 <FormControlLabel  value = "true" control={<Radio color="primary" />} label="Valores SCADA" />
-                <FormControlLabel  value = "false" control={<Radio color="primary" />} label="Datos comerciales" />
+                <FormControlLabel   value = "false" control={<Radio color="primary" />} label="Datos comerciales" />
               </RadioGroup>
           </FormControl> 
 
@@ -176,10 +221,10 @@ function Archivo(props){
               </FormControl>
 
             <Grid container justify="center" className="GridBoton">
-                <Button onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
-                {/* <Button className="Boton" type="submit" variant="contained" color="primary">    Aplicar Archivo  </Button> */}
+                <Button disabled={guardarDesactivado} onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
+                <Button disabled={eliminarDesactivado} onClick={eliminarArchivo} className="Boton"  variant="contained" color="primary">    Eliminar Archivo  </Button>
                 <br/>
-              </Grid>           
+            </Grid>           
                 <div>   
                     { savedStatus===true?
                       <Alert className="Alert" severity={error===true?'error':'success'}>

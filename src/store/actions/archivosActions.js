@@ -11,7 +11,8 @@ import {
 
 } from '../types';
 
-import{guardarArchivo,obtenerArchivo} from '../../Services/ApiService';
+import{guardarArchivo,obtenerArchivo,obtenerArchivoFecha,eliminarArchivo} from '../../Services/ApiService';
+import { CompareArrowsOutlined } from '@material-ui/icons';
 
 export const saveArchivoSuccess=archivo=>({
     type:SAVE_ARCHIVO_SUCCESS,
@@ -62,7 +63,7 @@ export function saveArchivoAction(archivo){
 
          const response=  await guardarArchivo(archivo);
 
-            console.log(response);
+           // console.log(response);
             dispatch(saveArchivoSuccess(response.data));
            
         } catch (error) {
@@ -77,11 +78,11 @@ export function getArchivoAction(fecha){
     return async (dispatch) =>{
         dispatch(startSaveArchivo());
        try {
+        //console.log(fecha);
+         const response=  await obtenerArchivoFecha(fecha);
 
-         const response=  await obtenerArchivo(fecha);
-
-            console.log(response);
-            dispatch(getArchivoSuccess(response.data));
+           // console.log(response);
+            dispatch(getArchivoSuccess(response));
            
         } catch (error) {
           console.log(error);
@@ -91,19 +92,18 @@ export function getArchivoAction(fecha){
 
 };
 
-export function saveArchivoAction(archivo){
+export function deleteArchivoAction(id){
     return async (dispatch) =>{
-        dispatch(startSaveArchivo());
+        dispatch(startDeleteArchivo());
        try {
 
-         const response=  await guardarArchivo(archivo);
-
-            console.log(response);
-            dispatch(saveArchivoSuccess(response.data));
+         const response=  await eliminarArchivo(id);
+        // console.log(response);
+         dispatch(deleteArchivoSuccess(response.data));
            
         } catch (error) {
           console.log(error);
-             dispatch(saveArchivoFailure(error));
+          dispatch(deleteArchivoFailure(error));
          }
     }
 
