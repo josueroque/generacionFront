@@ -2,10 +2,10 @@ import axios from 'axios';
 export const URL='http://localhost:53363/api';
 
 
-export async function obtenerArchivo(id){  
+export async function obtenerArchivo(fecha){  
     try {
       
-      const requestUrl =URL +'/archivos?id='+id;
+      const requestUrl =URL +'/archivos/filtro?fecha='+fecha;
       const response = await axios.get(requestUrl);
        
       if (response.statusText!=="OK") {

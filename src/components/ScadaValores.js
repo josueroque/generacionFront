@@ -103,6 +103,7 @@ function ScadaValores(props){
           )
 
         let urlFiltros=URL+'scadavalores/';
+        console.log(urlFiltros);
         if (fecha1){
             urlFiltros+='filtro?FechaInicial='+Fecha1;
         }

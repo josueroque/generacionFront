@@ -200,8 +200,8 @@ function SubestacionEditar(props){
                  
                 </Select>
              </FormControl>
-             <TextField onChange={handleChange} name='nombre' value={nombre} id="standard-basic" label="Nombre" />
-             <TextField onChange={handleChange} name='nomenclatura' value={nomenclatura} id="standard-basic" label="Nomenclatura" />
+             <TextField onChange={handleChange} name='nombre' value={nombre?nombre:''} id="standard-basic" label="Nombre" />
+             <TextField onChange={handleChange} name='nomenclatura' value={nomenclatura?nomenclatura:''} id="standard-basic" label="Nomenclatura" />
                           
              <Grid container justify="center" className="GridBoton">
                 <Button className="Boton" type="submit" variant="contained" color="primary">    Guardar  </Button>
