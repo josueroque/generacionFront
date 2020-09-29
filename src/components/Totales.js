@@ -5,7 +5,6 @@ import Menu from './Menu';
 import { Grid,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
 import { Button} from '@material-ui/core'; 
-import { Table,TableContainer,Paper,TableHead,TableRow,TableCell,TableBody,TablePagination,TableFooter} from '@material-ui/core';
 import { makeStyles,useTheme } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';  
 import { format } from 'date-fns';
@@ -13,20 +12,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExportExcel from 'react-export-excel';
-//paginacion
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import PropTypes from 'prop-types';
-const useStyles1 = makeStyles((theme) => ({
-    root: {
-      flexShrink: 0,
-      marginLeft: theme.spacing(2.5),
-    },
-  }));
-  //paginacion
+import MaterialTable,{ MTableToolbar } from 'material-table';
 
 
 const useStyles = makeStyles(theme => ({
@@ -40,71 +26,11 @@ const useStyles = makeStyles(theme => ({
   const ExcelFile=ExportExcel.ExcelFile;
   const ExcelSheet=ExportExcel.ExcelSheet;
   const ExcelColumn=ExportExcel.ExcelColumn;
-  
 
-//paginacion
-function TablePaginationActions(props) {
-    const classes = useStyles1();
-    const theme = useTheme();
-    const { count, page, rowsPerPage, onChangePage } = props;
-  
-    const handleFirstPageButtonClick = (event) => {
-      onChangePage(event, 0);
-    };
-  
-    const handleBackButtonClick = (event) => {
-      onChangePage(event, page - 1);
-    };
-  
-    const handleNextButtonClick = (event) => {
-      onChangePage(event, page + 1);
-    };
-  
-    const handleLastPageButtonClick = (event) => {
-      onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-  
-    return (
-      <div className={classes.root}>
-        <IconButton
-          onClick={handleFirstPageButtonClick}
-          disabled={page === 0}
-          aria-label="first page"
-        >
-          {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-        </IconButton>
-        <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-          {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-        </IconButton>
-        <IconButton
-          onClick={handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="next page"
-        >
-          {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-        </IconButton>
-        <IconButton
-          onClick={handleLastPageButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-          aria-label="last page"
-        >
-          {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-        </IconButton>
-      </div>
-    );
-  }
-  
-  TablePaginationActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-  };
-//paginacion
 
 function Totales(props){
-    //const URL='http://localhost:53363/api/';
-    const URL='http://192.168.0.14:5100/api/';
+    const URL='http://localhost:53363/api/';
+    //const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
@@ -120,8 +46,9 @@ function Totales(props){
 
     useEffect(()=>{
      
-     getPlantas();
-     getFuentes();   
+      getPlantas();
+      getFuentes();   
+
 
     }
     ,[]);
@@ -145,14 +72,11 @@ function Totales(props){
 
     const setColumns= async function(){
         const columns2=[
-            { title: 'Fecha1', field: 'fecha'  },
-            { title: 'Hora', field: 'hora' }
+            { title: 'Planta', field: 'nombre'  },
+            { title: 'Total', field: 'sum' }
            
         ];
        
-        for (let item of plantas){
-            columns2.push({ title: item, field: item});
-        } 
     }
 
     const getPlantas=    async function (){
@@ -206,7 +130,7 @@ function Totales(props){
         let urlFiltros=URL+'scadavalores/';
     
         if (fecha1){
-            urlFiltros+='filtro?FechaInicial='+Fecha1;
+            urlFiltros+='filtro?totales=true&FechaInicial='+Fecha1;
         }
         if (fecha2){
            fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
@@ -218,7 +142,7 @@ function Totales(props){
                     urlFiltros+='&NombrePlanta='+nombrePlanta;
                 }
                 else{
-                    urlFiltros+='filtro?NombrePlanta='+nombrePlanta;
+                    urlFiltros+='filtro?totales=true&NombrePlanta='+nombrePlanta;
                 }
             }
         }
@@ -229,7 +153,7 @@ function Totales(props){
                       urlFiltros+='&IdZona='+idZona;
                   }
                   else{
-                      urlFiltros+='filtro?IdZona='+idZona;
+                      urlFiltros+='filtro?totales=true&IdZona='+idZona;
                   }
               }
           }
@@ -241,13 +165,15 @@ function Totales(props){
                       urlFiltros+='&IdFuente='+idFuente;
                   }
                   else{
-                      urlFiltros+='filtro?IdFuente='+idFuente;
+                      urlFiltros+='filtro?totales=true&IdFuente='+idFuente;
                   }
                   
               }
           }
 
         const data2= await (axios.get(urlFiltros));
+       updateColumns( [{ title: 'Planta', field: 'nombre'  },
+                       { title: 'Total', field: 'sum' }]);
 
         console.log(data2);
         updateData(data2.data);  
@@ -255,18 +181,6 @@ function Totales(props){
     }
     
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-  
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
  
     return(
       <Fragment>
@@ -322,7 +236,7 @@ function Totales(props){
                     value={nombrePlanta}
                     name="planta"
                     onChange={handleChange}
-                    
+                   
                     
                 >
                     <MenuItem value="Todos" key="Todos">
@@ -386,52 +300,20 @@ function Totales(props){
                 <ExportarExcelComponente></ExportarExcelComponente>        
         </Grid>  
 
-         <div className="MaterialTable">
-         <TableContainer component={Paper}>
-            <TableHead>
-                      <TableRow>
-                            <TableCell > Planta </TableCell>
-                            <TableCell > Fecha </TableCell>
-                            <TableCell > Hora </TableCell>
-                            <TableCell > Valor </TableCell>
-                            <TableCell > Zona </TableCell>
-                            <TableCell > Tipo de Energia </TableCell>
-                      </TableRow>  
-            </TableHead>
-            <TableBody>
-                { data.length>0 ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell>{row.planta.nombre}</TableCell>
-                            <TableCell>{row.fecha}</TableCell>
-                            <TableCell>{row.hora}</TableCell>
-                            <TableCell>{row.valor}</TableCell>
-                            <TableCell>{row.valor}</TableCell>
-                            <TableCell>{row.valor}</TableCell>
+        <div className="MaterialTable">
+            { data.length>0 ? 
+            
+                <MaterialTable
 
-                        </TableRow>
-                    ))       
-                :''}
-            </TableBody>
-                <TableFooter> 
-                    <TableRow>
-                        <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                        colSpan={3}
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        SelectProps={{
-                            inputProps: { 'aria-label': 'rows per page' },
-                            native: true,
-                        }}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                        />
-                    </TableRow>
-                </TableFooter>
-          </TableContainer>
+                columns={columns}
+                 data={data}
+                title=""
+                options={{
+                    exportButton: false
+                  }}
+                />
+              
+            :''}
          </div>
             
    
