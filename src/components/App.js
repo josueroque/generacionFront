@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from './Home';
 import Subestacion from './Subestacion';
 import SubestacionEditar from './SubestacionEditar';
+import Totales from './Totales';
 
 class App  extends Component {
 
@@ -22,6 +23,7 @@ class App  extends Component {
 
             {/* <Route exact path='/Login' component={Login}  /> */}
             {/* <Route exact path='/' component={Home}  /> */}
+                <Route exact path='/Totales' component={Totales}  /> 
                 <Route exact path='/ScadaValores' component={ScadaValores}  /> 
                <Route exact path='/Archivo' component={Archivo}  />
                <Route exact path='/Subestacion' component={Subestacion}  />

@@ -328,12 +328,12 @@ export default function Menu() {
                         <ListItemText primary="Produccion horaria por Planta" />
                     </ListItem>
                   </Link>
-                <Link key='Create8' to={{pathname:`/search`}}  className='LinkMenu'>    
+                <Link key='Create8' to={{pathname:`/totales`}}  className='LinkMenu'>    
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
                       <EvStation />
                     </ListItemIcon>
-                    <ListItemText primary="Plantas" />
+                    <ListItemText primary="Totales" />
                   </ListItem>
                 </Link>
               </List>
