@@ -28,8 +28,8 @@ const useStyles = makeStyles(theme => ({
   const ExcelColumn=ExportExcel.ExcelColumn;
   
 function ScadaValores(props){
-    //const URL='http://localhost:53363/api/';
-    const URL='http://192.168.0.14:5100/api/';
+    const URL='http://localhost:53363/api/';
+   // const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
@@ -69,17 +69,6 @@ function ScadaValores(props){
         )
     }
 
-    const setColumns= async function(){
-        const columns2=[
-            { title: 'Fecha1', field: 'fecha'  },
-            { title: 'Hora', field: 'hora' }
-           
-        ];
-       
-        for (let item of plantas){
-            columns2.push({ title: item, field: item});
-        } 
-    }
 
     const getPlantas=    async function (){
        const data2= await (axios.get(URL+'plantas'));
@@ -123,15 +112,16 @@ function ScadaValores(props){
                 }
             }
         }
-        console.log(urlFiltros);
+
         const data2= await (axios.get(urlFiltros));
         const plantas2=[];
         const fechas2=[];
 
         
         for(let item of data2.data){
-            if (!plantas2.includes(item.planta.rotulacionSCADA)){
-                plantas2.push(item.planta.rotulacionSCADA);
+            
+            if (!plantas2.includes(item.planta.nombre)&&item.planta.intercambio===false){
+                plantas2.push(item.planta.nombre);
             }
         }
         //format(new Date(fecha2),'dd/MM/yyyy' )
@@ -140,16 +130,14 @@ function ScadaValores(props){
                 fechas2.push(format(new Date(item2.fecha),'dd/MM/yyyy' ));
             }
         }
-        console.log(fechas2);
-      //  fechas2.sort(function(o){ return new Date( o.date ) });
-        console.log(fechas2);
+
        updateFechas(fechas2);
       //  updatePlantas(plantas2);
       
         const dataCruzada=[];
       //  console.log(data2.data);
         const horas=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-        
+      // console.log(data2.data);
         for(let item3 of fechas2){
             
             for (let item4 of horas){
@@ -162,8 +150,9 @@ function ScadaValores(props){
                 let auxiliar={};
                 auxiliar["fecha"]=item3;
                 auxiliar["hora"]=item4;
+
                 for (let item5 of valoresPlanta){
-                    auxiliar[item5.planta.rotulacionSCADA]=item5.valor;
+                  { item5.valor>0? auxiliar[item5.planta.nombre]=(parseFloat(item5.valor)*1000).toFixed(0):auxiliar[item5.planta.nombre]=0 };
                 }
 
                // console.log(auxiliar);
@@ -180,7 +169,8 @@ function ScadaValores(props){
         ];
        
         for (let item6 of plantas2){
-            columns2.push({ title: item6, field: item6});
+
+            columns2.push({ title: item6, field: item6,type:"numeric"});
         } 
         
         updateColumns(columns2);
