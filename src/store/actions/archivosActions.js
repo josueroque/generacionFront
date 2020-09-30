@@ -12,7 +12,7 @@ import {
 } from '../types';
 
 import{guardarArchivo,obtenerArchivo,obtenerArchivoFecha,eliminarArchivo} from '../../Services/ApiService';
-import { CompareArrowsOutlined } from '@material-ui/icons';
+
 
 export const saveArchivoSuccess=archivo=>({
     type:SAVE_ARCHIVO_SUCCESS,

@@ -220,7 +220,7 @@ export default function Menu() {
                         <ListItemText primary="Subir Archivo" />
                     </ListItem>
                   </Link>
-                <Link key='Create' to={{pathname:`/general`}}  className='LinkMenu'>  
+                {/* <Link key='Create' to={{pathname:`/general`}}  className='LinkMenu'>  
                   <ListItem button className={classes.nested}>
                       <ListItemIcon>
                         <Create />
@@ -235,7 +235,7 @@ export default function Menu() {
                     </ListItemIcon>
                     <ListItemText primary="Datos Comerciales" />
                   </ListItem>
-                </Link>
+                </Link> */}
               </List>
             </Collapse>            
 

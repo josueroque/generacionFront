@@ -14,7 +14,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExportExcel from 'react-export-excel';
-
+import Loader from './Loader';
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
@@ -40,6 +40,7 @@ function ScadaValores(props){
     const [columns,updateColumns]=useState([]);
     const [idPlanta,updateIdPlanta]=useState(null);
     const [nombrePlanta,updateNombrePlanta]=useState("Todos");
+    const [loading,updateLoading]=useState(false);
 
 
     useEffect(()=>{
@@ -83,6 +84,7 @@ function ScadaValores(props){
     }
 
     const getData=async function (){
+       updateLoading(true);
         let Fecha1= format(
             new Date(fecha1),
             'MM/dd/yyyy'
@@ -130,7 +132,10 @@ function ScadaValores(props){
                 fechas2.push(format(new Date(item2.fecha),'dd/MM/yyyy' ));
             }
         }
-
+        fechas2.sort(function(a,b){
+            return new Date(a) - new Date(b)
+          })
+       console.log(fechas2);
        updateFechas(fechas2);
       //  updatePlantas(plantas2);
       
@@ -178,6 +183,7 @@ function ScadaValores(props){
         // console.log(columns2);
         // console.log(dataCruzada);
         updateData(dataCruzada);
+        updateLoading(false);
         return dataCruzada;
     }
     
@@ -247,13 +253,20 @@ function ScadaValores(props){
              </FormControl>
 
         </FormGroup>
-         
+        {loading?
+        <Fragment>
+            <br/><br/><br/>
+        <Loader></Loader>
+        </Fragment>
+        :
+        <Fragment>
+            
         <Grid container justify="center" className="GridBotonConsulta">
                 <Button onClick={getData} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
                 <ExportarExcelComponente></ExportarExcelComponente>        
         </Grid>  
-
+       
          <div className="MaterialTable">
             { data.length>0 ? 
             
@@ -269,7 +282,8 @@ function ScadaValores(props){
               
             :''}
          </div>
-            
+         </Fragment>
+        }
    
       </Fragment>
 

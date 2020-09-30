@@ -50,11 +50,12 @@ function Archivo(props){
     const [scada,actualizaScada]=useState(true);
     const [id,actualizaId]=useState(null);
     const [savedStatus,updateSavedStatus]=useState(false);
+    const [fechaDiferente,updateFechaDiferente]=useState(false);
     const [guardarDesactivado,actualizaGuardarDesactivado]=useState(false);
     const [eliminarDesactivado,actualizaEliminarDesactivado]=useState(true);
 
     useEffect(()=>{
-    //   console.log(archivo[0]);
+ 
       },[archivo])
 
       useEffect(()=>{
@@ -68,11 +69,13 @@ function Archivo(props){
           {
             archivoConsultado.request.status===200 ? actualizaGuardarDesactivado(true):actualizaGuardarDesactivado(false);
             archivoConsultado.request.status===200 ? actualizaEliminarDesactivado(false):actualizaEliminarDesactivado(true);
+
           }
         else
           {
             actualizaGuardarDesactivado(false);
             actualizaEliminarDesactivado(true);
+           // updateFechaDiferente(false);
           }
        // actualizaArchivo(respuesta); 
 
@@ -117,6 +120,7 @@ function Archivo(props){
       const tomarArchivo=(e)=> {
         //  console.log(e.target.files);
           actualizaArchivo(e.target.files);
+          console.log(e.target.files);
           updateSavedStatus(false);
       } 
       
@@ -149,14 +153,27 @@ function Archivo(props){
           <form
             onSubmit={e=>{
               e.preventDefault();
+
+               console.log(archivo[0].name);
+               let dia=parseInt(archivo[0].name.substring(19,21));
+               let mes=parseInt(archivo[0].name.substring(21,23));
+               let año=parseInt(archivo[0].name.substring(23,25));
+               let fechaValidacion= new Date(fecha );
+               console.log(fechaValidacion.getYear());
+               if(dia!==fechaValidacion.getDate()||mes!==(fechaValidacion.getMonth()+1)){
+                 updateFechaDiferente(true);
+                 return;
+               }
+               else{
+                updateFechaDiferente(false);
+               }
+              
               let archivoCreado={
                 ruta:archivo,
                 scada,
                 fecha
               }
-              //console.log(archivo[0]);
-             // let objetoArchivo=URL.createObjectURL(archivo[0]);
-             // console.log(objetoArchivo);
+
              let fechaConFormato= format(
               new Date(archivoCreado.fecha),
               'dd/MM/yyyy'
@@ -227,7 +244,15 @@ function Archivo(props){
                 <Button disabled={guardarDesactivado} onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
                 <Button disabled={eliminarDesactivado} onClick={eliminarArchivo} className="Boton"  variant="contained" color="primary">    Eliminar Archivo  </Button>
                 <br/>
-            </Grid>           
+            </Grid>   
+               <div>   
+                    { fechaDiferente===true?
+                      <Alert className="Alert" severity={fechaDiferente===true?'error':'success'}>
+                        {'La fecha seleccionada no coincide con el archivo seleccionado'}
+                      </Alert>
+                      :''  
+                    }
+                </div>        
                 <div>   
                     { savedStatus===true?
                       <Alert className="Alert" severity={error===true?'error':'success'}>

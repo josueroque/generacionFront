@@ -44,8 +44,8 @@ export async function obtenerArchivoFecha(fecha){
       
       const requestUrl =URL +'/archivos/'+id;
       const response = await axios.delete(requestUrl);
-       
-      if (response.statusText!=="OK") {
+       console.log(response);
+      if (response.status!==200&&response.status!==204) {
           throw new Error('Error eliminando archivo');
         }
         return response; 
