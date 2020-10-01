@@ -9,6 +9,7 @@ import Home from './Home';
 import Subestacion from './Subestacion';
 import SubestacionEditar from './SubestacionEditar';
 import Totales from './Totales';
+import Login from './Login';
 
 class App  extends Component {
 
@@ -28,7 +29,8 @@ class App  extends Component {
                <Route exact path='/Archivo' component={Archivo}  />
                <Route exact path='/Subestacion' component={Subestacion}  />
                <Route exact path='/SubestacionEditar' component={SubestacionEditar}  />
-               <Route exact path='/' component={Home}  />
+               <Route exact path='/Home' component={Home}  />
+               <Route exact path='/' component={Login}  />               
           </Switch>
           
       </Router>

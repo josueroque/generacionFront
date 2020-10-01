@@ -70,6 +70,11 @@ function ScadaValores(props){
         )
     }
 
+    const wait=async(ms)=> {
+        return new Promise(resolve => {
+        setTimeout(resolve, ms);
+        });
+    }
 
     const getPlantas=    async function (){
        const data2= await (axios.get(URL+'plantas'));
@@ -83,8 +88,17 @@ function ScadaValores(props){
         updateNombrePlanta(event.target.value);
     }
 
+    const consultar=async()=>{
+        updateLoading(true);
+        //await wait(1000);
+        await getData();
+        //await wait(1000);
+        updateLoading(false);
+
+    }
+
     const getData=async function (){
-       updateLoading(true);
+      
         let Fecha1= format(
             new Date(fecha1),
             'MM/dd/yyyy'
@@ -114,29 +128,39 @@ function ScadaValores(props){
                 }
             }
         }
-
+     
         const data2= await (axios.get(urlFiltros));
-        const plantas2=[];
-        const fechas2=[];
+        await wait(1000);
 
-        
-        for(let item of data2.data){
+        let diccionarioPlantas= Object.fromEntries(data2.data.map(m => [m.planta.nombre,m.planta.nombre]));
+        let diccionarioFechas=Object.fromEntries(data2.data.map(m => [format(new Date(m.fecha   ),'dd/MM/yyyy' ),m.fecha]));
+        // console.log('diccionario');
+        // console.log(diccionarioPlantas);
+        // console.log(Object.keys(diccionarioPlantas).length);
+        // console.log(diccionarioFechas);  
+        const plantas2=Object.keys(diccionarioPlantas);
+        const fechas2=Object.keys(diccionarioFechas);  
+        console.log(fechas2);
+        console.log(plantas2);
+        console.log(data2.data.length);
+        // for(let item of data2.data){
             
-            if (!plantas2.includes(item.planta.nombre)&&item.planta.intercambio===false){
-                plantas2.push(item.planta.nombre);
-            }
-        }
+        //     if (!plantas2.includes(item.planta.nombre)&&item.planta.intercambio===false){
+        //         plantas2.push(item.planta.nombre);
+        //     }
+        // }
         //format(new Date(fecha2),'dd/MM/yyyy' )
-        for(let item2 of data2.data){
-            if (!fechas2.includes(format(new Date(item2.fecha   ),'dd/MM/yyyy' ))){
-                fechas2.push(format(new Date(item2.fecha),'dd/MM/yyyy' ));
-            }
-        }
+
+        // for(let item2 of data2.data){
+        //     if (!fechas2.includes(format(new Date(item2.fecha   ),'dd/MM/yyyy' ))){
+        //         fechas2.push(format(new Date(item2.fecha),'dd/MM/yyyy' ));
+        //     }
+        // }
         fechas2.sort(function(a,b){
             return new Date(a) - new Date(b)
           })
-       console.log(fechas2);
-       updateFechas(fechas2);
+       //console.log(fechas2);
+      // updateFechas(fechas2);
       //  updatePlantas(plantas2);
       
         const dataCruzada=[];
@@ -166,7 +190,7 @@ function ScadaValores(props){
            
 
         }
-
+        await wait(1000);
         const columns2=[
             { title: 'Fecha', field: 'fecha'},
             { title: 'Hora', field: 'hora' }
@@ -183,8 +207,8 @@ function ScadaValores(props){
         // console.log(columns2);
         // console.log(dataCruzada);
         updateData(dataCruzada);
-        updateLoading(false);
-        return dataCruzada;
+     
+        return ;
     }
     
  
@@ -257,12 +281,13 @@ function ScadaValores(props){
         <Fragment>
             <br/><br/><br/>
         <Loader></Loader>
+        <Grid container justify="center">Espere por favor...</Grid>
         </Fragment>
         :
         <Fragment>
             
         <Grid container justify="center" className="GridBotonConsulta">
-                <Button onClick={getData} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
+                <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
                 <ExportarExcelComponente></ExportarExcelComponente>        
         </Grid>  

@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Loader() {
+export default function Loader(props) {
  // const classes = useStyles();
   const [progress, setProgress] = React.useState(0);
 
@@ -30,7 +30,7 @@ export default function Loader() {
 
   return (
     <div className="Loader" >
-      <CircularProgress variant="determinate" value={progress} />
+      <CircularProgress   disableShrink/>
       {/* <CircularProgress variant="determinate" value={progress} color="secondary" /> */}
     </div>
   );

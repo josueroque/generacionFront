@@ -115,7 +115,12 @@ function Totales(props){
         }
        // updateNombrePlanta(event.target.value);
     }
-
+    const wait=async(ms)=> {
+        return new Promise(resolve => {
+        setTimeout(resolve, ms);
+        });
+      }
+      
     const getData=async function (){
         let Fecha1= format(
             new Date(fecha1),
