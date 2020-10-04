@@ -1,6 +1,6 @@
 import React,{Fragment,useState} from 'react';
 import {useDispatch,useSelector} from 'react-redux';
-//import {logoutUserAction} from '../store/actions/userActions';
+import {logoutUserAction} from '../store/actions/usersActions';
 import clsx from 'clsx';
 import {Link} from 'react-router-dom';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -102,10 +102,10 @@ export default function Menu() {
   const classes = useStyles();
   const theme = useTheme();
   const dispatch=useDispatch(); 
-  const user=useState({token:true,nickname:'prueba'});
+  const user=useSelector(state=>state.user.user);
   //quitar,de prueba
   const auth= useState({token:true});
-  const logOut={};
+  const logOut=(userRedux) =>dispatch(logoutUserAction(userRedux));
   const [open, setOpen] = React.useState(false);
   const [openNested, setOpenNested] = React.useState(false);
   const [openNested2, setOpenNested2] = React.useState(false);
@@ -164,16 +164,16 @@ export default function Menu() {
             <MenuIcon />
             
           </IconButton>
-          <Link to={ {pathname: `/`}} className="Link" >  
+          {/* <Link to={ {pathname: `/`}} className="Link" >  
           <Typography variant="h6" noWrap>
              Inicio
           </Typography>
-          </Link>
-          {/* <Link key ={'Login'} to={auth.token? {pathname: `/Login`}:{pathname: `/Logout`}}  className="Link loginMenu"  onClick={auth.token ?  ()=>logoutFunction({}) :()=>{}}>  
-          <Typography variant="h6" noWrap >
-          {!auth.token ? 'Login':'Logout'}
-          </Typography>
           </Link> */}
+          <Link key ={'Login'} to={auth.token? {pathname: `/`}:{pathname: `/`}}  className="Link loginMenu"  onClick={auth.token ?  ()=>logOut(user) :()=>{}}>  
+          <Typography variant="h6" noWrap >
+          {!auth.token ? 'Login':'Cerrar Sesión'}
+          </Typography>
+          </Link>
         
 
         </Toolbar>

@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { Fragment,useEffect,useState } from 'react';
+import {useDispatch,useSelector} from 'react-redux';
+import {authUserAction} from '../store/actions/usersActions';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,7 +11,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import MuiAlert from '@material-ui/lab/Alert';
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -43,10 +48,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(props) {
   const classes = useStyles();
+  const dispatch=useDispatch();
+  const user=useSelector(state=>state.user.user);
+  const error=useSelector(state=>state.user.error);
+  const [email,updateEmail] =useState('');
+  const [password,updatePassword] =useState('');
+  const authUser=(newUser) =>dispatch(authUserAction(newUser));
+  
+  useEffect(()=>{
+    console.log(user);
+      if (user.token && error===false){
+          
+          props.history.push("/Home");
+          
+      }
+
+  },[user])
+
 
   return (
+
     <Container component="main" maxWidth="xs">
       <CssBaseline />
 
@@ -56,7 +79,7 @@ export default function Login() {
         </Typography>
 
 
-        <br/>
+        <br/>   
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -65,7 +88,24 @@ export default function Login() {
         <Typography component="h2" variant="h5">
           Autenticación
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate
+                             onSubmit={e=> {
+                                e.preventDefault();
+                                   
+                                const loginUser={
+                                            email:email,
+                                            password:password
+                                            };
+                                                                     
+                                const response=  authUser(loginUser);
+                                console.log(response);
+                                
+         
+        
+                            } 
+                         }
+        
+        >
           <TextField
             variant="outlined"
             margin="normal"
@@ -76,6 +116,10 @@ export default function Login() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={e=>updateEmail(e.target.value)}
+            value={email}
+            required
+
           />
           <TextField
             variant="outlined"
@@ -87,6 +131,9 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={e=>updatePassword(e.target.value)}
+            value={password}
+            required
           />
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}

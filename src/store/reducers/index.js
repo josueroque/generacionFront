@@ -7,5 +7,6 @@ import userReducer from './userReducer';
 
 export default combineReducers({
     archivos: archivosReducer,
-    subestaciones:subestacionesReducer
+    subestaciones:subestacionesReducer,
+    user:userReducer
 });

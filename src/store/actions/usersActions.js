@@ -23,7 +23,7 @@ import {
 
 } from '../types';
 
-import {saveUser,loginUser,editUser,deleteUser,saveRequest,resetPassword} from '../../services/apiServices';
+import {saveUser,loginUser,editUser,deleteUser,saveRequest,resetPassword} from '../../Services/ApiService';
 
 export const resetPasswordSuccess=request=>({
     type:RESET_PASSWORD_SUCCESS,
@@ -172,16 +172,15 @@ export  function  authUserAction  (user) {
          try {
              
             const response=await loginUser(user);
-            if (response.data.ok){
+            console.log(response.data);
+            console.log(user);
+            if (response.statusText=== 'OK'){
                 user.token=response.data.token;
-                user.name=response.data.name;
-                user.nickname=response.data.nickname;
-                user._id=response.data._id;
-                user.favorites=response.data.favorites;
                 user.password='';
                 dispatch(authUserSuccess(user));
             }
             else {
+                console.log(response);
                 dispatch(authUserFailure());
             }
                

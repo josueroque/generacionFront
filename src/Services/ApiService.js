@@ -1,6 +1,6 @@
 import axios from 'axios';
-export const URL='http://localhost:53363/api';
-//const URL='http://192.168.0.14:5100/api';
+//export const URL='http://localhost:53363/api';
+const URL='http://192.168.0.14:5100/api';
 
 export async function obtenerArchivoFecha(fecha){  
     try {
@@ -145,4 +145,112 @@ export const  editarSubestacion= async (subestacion) =>{
     
    }
  }
-  
+
+ 
+ //USERS
+ export const  editUser= async (user,id,token) =>{
+  try {
+    const requestUrl =URL +'/users/'+id;
+
+     const config = {
+       headers: { 
+        
+        'x-access-token': `${token}`,
+
+      }};
+
+      const response = await axios.put(requestUrl,user,config);
+
+      return response;   
+  } catch (error) {
+   
+    throw(error);
+  }
+}
+
+export const deleteUser= async (user,id,token) =>{
+  try {
+    const requestUrl =URL +'/users/'+id;
+
+     const config = {
+       headers: { 
+        
+        'x-access-token': `${token}`,
+        'email':user.email
+
+      }};
+
+      const response = await axios.delete(requestUrl,config);
+
+      return response;   
+  } catch (error) {
+   
+    throw(error);
+  }
+}
+export const  saveRequest= async (request) =>{
+  try {
+    const requestUrl =URL +'/authenticate/forgot';
+
+    const response = await axios.post(requestUrl,request);
+
+    return response;   
+
+  } catch (error) {
+   
+    throw(error);
+  }
+}
+
+export const  resetPassword= async (request) =>{
+  try {
+    const requestUrl =URL +'/authenticate/reset';
+
+    const response = await axios.put(requestUrl,request);
+
+    return response;   
+
+  } catch (error) {
+   
+    throw(error);
+  }
+}
+
+export async function saveUser(user){  
+  try {
+       
+     const requestUrl =URL +'/authenticate/register';
+     const response = await axios.post(requestUrl, user );
+     if (response.statusText!=="OK") {
+       throw new Error('Error saving user');
+     }
+
+     return response; 
+    
+ }
+ catch(error){
+     console.log(error.response);
+     throw error.response;
+ }
+}
+
+export async function loginUser(user){  
+ try {
+   
+    const requestUrl =URL +'/cuentas/login';
+
+ console.log(requestUrl);
+ console.log(user);   
+ const response = await axios.post(requestUrl, user);
+    if (response.statusText!=="OK") {
+      throw new Error('Error saving user');
+    }
+
+    return response; 
+   
+}
+catch(error){
+    console.error(error.response);
+    throw error;
+}
+}
