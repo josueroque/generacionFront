@@ -42,7 +42,7 @@ function Archivo(props){
     const loading=useSelector(state=>state.archivos.loading);
    // const archivoGuardado=useSelector(state=>state.archivos.archivo);
     const archivoConsultado=useSelector(state=>state.archivos.archivo);
-    const saveArchivo=(archivo) =>dispatch(saveArchivoAction(archivo));
+    const saveArchivo=(archivo,token) =>dispatch(saveArchivoAction(archivo,token));
     const getArchivo=(fecha) =>dispatch(getArchivoAction(fecha));
     const deleteArchivo=(id) =>dispatch(deleteArchivoAction(id));
     const [archivo,actualizaArchivo]=useState({});
@@ -53,7 +53,7 @@ function Archivo(props){
     const [fechaDiferente,updateFechaDiferente]=useState(false);
     const [guardarDesactivado,actualizaGuardarDesactivado]=useState(false);
     const [eliminarDesactivado,actualizaEliminarDesactivado]=useState(true);
-
+    const user=useSelector(state=>state.user.user);
     useEffect(()=>{
  
       },[archivo])
@@ -107,14 +107,17 @@ function Archivo(props){
       }
       
       const guardarNuevo=async(archivoFile)=>{
-      //  console.log('desde funcion');
-     //   console.log(archivo.ruta);
         await wait(1000);
-        const respuesta=  saveArchivo(archivoFile);
+        if (user.token){
+        const respuesta=  saveArchivo(archivoFile,user.token);
         await wait(1000);
     //    console.log(archivoGuardado);
         updateSavedStatus(true);
         return respuesta;
+        }
+        else{
+          props.history.push('/');
+        }
       }
       
       const tomarArchivo=(e)=> {
@@ -128,12 +131,18 @@ function Archivo(props){
         //  console.log('desde funcion');
        //   console.log(archivo.ruta);
           await wait(1000);
-          console.log(archivoConsultado);
-          const respuesta=  deleteArchivo(archivoConsultado.data.id);
+         // console.log(archivoConsultado);
+         if (user.token){
+          const respuesta=  deleteArchivo(archivoConsultado.data.id,user.token);
           await wait(1000);
           console.log(respuesta);
           updateSavedStatus(true);
           return respuesta;
+         }
+         else{
+           props.history.push('/');
+         }
+
         }
 
     return(

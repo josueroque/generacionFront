@@ -56,12 +56,12 @@ export const deleteArchivoFailure = (error) => ({
     payload:error
 });
 
-export function saveArchivoAction(archivo){
+export function saveArchivoAction(archivo,token){
     return async (dispatch) =>{
         dispatch(startSaveArchivo());
        try {
 
-         const response=  await guardarArchivo(archivo);
+         const response=  await guardarArchivo(archivo,token);
 
            // console.log(response);
             dispatch(saveArchivoSuccess(response.data));
@@ -92,12 +92,12 @@ export function getArchivoAction(fecha){
 
 };
 
-export function deleteArchivoAction(id){
+export function deleteArchivoAction(id,token){
     return async (dispatch) =>{
         dispatch(startDeleteArchivo());
        try {
 
-         const response=  await eliminarArchivo(id);
+         const response=  await eliminarArchivo(id,token);
         // console.log(response);
          dispatch(deleteArchivoSuccess(response.data));
            

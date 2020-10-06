@@ -217,13 +217,14 @@ export  function  authUserAction  (user) {
      }
  };
 
- export  function  resetPasswordAction  (request) {
+ export  function  resetPasswordAction  (user) {
     return async (dispatch)=>{
          dispatch(startResetPassword());
          try {
              
-          await resetPassword (request);
-          dispatch(resetPasswordSuccess(request));
+          await resetPassword (user);
+
+          dispatch(resetPasswordSuccess(user));
                
          } catch (error) {
              dispatch(resetPasswordFailure(error));

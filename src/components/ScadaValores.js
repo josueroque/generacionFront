@@ -28,19 +28,17 @@ const useStyles = makeStyles(theme => ({
   const ExcelColumn=ExportExcel.ExcelColumn;
   
 function ScadaValores(props){
-   // const URL='http://localhost:53363/api/';
+   //const URL='http://localhost:53363/api/';
     const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
-    const [fechas,updateFechas]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
     const [fecha2,updateFecha2]=useState(null);
     const [plantas,updatePlantas]=useState([]);
-    const [flag,updateFlag]=useState(false);
     const [columns,updateColumns]=useState([]);
-    const [idPlanta,updateIdPlanta]=useState(null);
     const [nombrePlanta,updateNombrePlanta]=useState("Todos");
     const [loading,updateLoading]=useState(false);
+    const user=useSelector(state=>state.user.user);
 
 
     useEffect(()=>{
@@ -127,49 +125,25 @@ function ScadaValores(props){
             }
         }
      
-        const data2= await (axios.get(urlFiltros));
-     //   await wait(1000);
-
-       // let diccionarioPlantas= Object.fromEntries(data2.data.map(m => [m.planta.nombre,m.planta.nombre]));
-        let diccionarioFechas=Object.fromEntries(data2.data.map(m => [format(new Date(m.fecha   ),'dd/MM/yyyy' ),m.fecha]));
-             
-
-       // const plantas2=Object.keys(diccionarioPlantas);
-        const fechas2=Object.keys(diccionarioFechas);  
-
-        fechas2.sort(function(a,b){
-            return new Date(a) - new Date(b)
-          })
-      
-        const dataCruzada=[];
-      
-      //  console.log(data2.data);
-        const horas=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-      // console.log(data2.data);
-        for(let item3 of fechas2){
-            
-            for (let item4 of horas){
-                const valoresPlanta=data2.data.filter(function(dato){
-                    // console.log(dato.fecha);
-                    // console.log(new Date(dato.fecha),'dd/MM/yyyy');
-                    return format(new Date(dato.fecha),'dd/MM/yyyy' ) ===item3 && dato.hora===item4 ;
-                });
-
-                let auxiliar={};
-                auxiliar["fecha"]=item3;
-                auxiliar["hora"]=item4;
-
-                for (let item5 of valoresPlanta){
-                  { item5.valor>0? auxiliar[item5.planta.nombre]=(parseFloat(item5.valor)*1000).toFixed(0):auxiliar[item5.planta.nombre]=0 };
-                }
-
-
-               dataCruzada.push(auxiliar);
-            }
+     let data2;
+     if (user.token)
+     {
+        const config = {
+          headers: { 
            
+            'Authorization': 'Bearer ' + user.token},
+        };
+         data2= await (axios.get(urlFiltros,config));
+      }
+      else{
+        data2=[];
+        props.history.push('/');
+      }
+        
+      
 
-        }
-       // await wait(1000);
+      // console.log(data2);
+
         const columns2=[
             { title: 'Fecha', field: 'fecha'},
             { title: 'Hora', field: 'hora' }
@@ -182,14 +156,16 @@ function ScadaValores(props){
        
        console.log(plantas2);
 
+
         for (let item6 of plantas2){
          //   console.log(item6);
             columns2.push({ title: item6.nombre, field: item6.nombre,type:"numeric"});
         } 
-        
+        console.log(columns2);
         updateColumns(columns2);
 
-        updateData(dataCruzada);
+       // updateData(dataCruzada);
+       updateData(data2.data);
      
         return ;
     }

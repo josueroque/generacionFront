@@ -39,11 +39,16 @@ export async function obtenerArchivoFecha(fecha){
    }
   }
 
-  export async function eliminarArchivo(id){  
+  export async function eliminarArchivo(id,token){  
     try {
       
       const requestUrl =URL +'/archivos/'+id;
-      const response = await axios.delete(requestUrl);
+      const config = {
+        headers: { 
+             'Authorization': 'Bearer ' + token
+           }
+        };
+      const response = await axios.delete(requestUrl,token);
        console.log(response);
       if (response.status!==200&&response.status!==204) {
           throw new Error('Error eliminando archivo');
@@ -57,17 +62,15 @@ export async function obtenerArchivoFecha(fecha){
    }
   }
 
-export const  guardarArchivo= async (archivo) =>{
+export const  guardarArchivo= async (archivo,token) =>{
    try {
       const requestUrl =URL +'/archivos';
        const config = {
          headers: { 
-          
-              'content-type': 'multipart/form-data'
+              'content-type': 'multipart/form-data',
+              'Authorization': 'Bearer ' + token
             }
          };
-      //console.log('desde service');   
-   
 
       const response = await axios.post(requestUrl,archivo,config);
   //    console.log(response);

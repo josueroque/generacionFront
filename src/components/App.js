@@ -10,6 +10,7 @@ import Subestacion from './Subestacion';
 import SubestacionEditar from './SubestacionEditar';
 import Totales from './Totales';
 import Login from './Login';
+import Cambiar from './CambiarContraseña';
 
 class App  extends Component {
 
@@ -30,7 +31,9 @@ class App  extends Component {
                <Route exact path='/Subestacion' component={Subestacion}  />
                <Route exact path='/SubestacionEditar' component={SubestacionEditar}  />
                <Route exact path='/Home' component={Home}  />
-               <Route exact path='/' component={Login}  />               
+               <Route exact path='/Cambiar' component={Cambiar}  /> 
+               <Route exact path='/' component={Login}  />        
+         
           </Switch>
           
       </Router>
