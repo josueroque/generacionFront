@@ -53,6 +53,7 @@ function Archivo(props){
     const [fechaDiferente,updateFechaDiferente]=useState(false);
     const [guardarDesactivado,actualizaGuardarDesactivado]=useState(false);
     const [eliminarDesactivado,actualizaEliminarDesactivado]=useState(true);
+
     const user=useSelector(state=>state.user.user);
     useEffect(()=>{
  

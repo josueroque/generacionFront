@@ -1,3 +1,4 @@
+import { ContactSupportOutlined } from '@material-ui/icons';
 import {
     START_SAVE_USER,
     SAVE_USER_SUCCESS,
@@ -23,7 +24,7 @@ import {
 
 
 const initialState={user:{},loading:false,error:false,errorInfo:''};
-
+//console.log(action.type);
 export default function (state=initialState,action){
     switch(action.type){
         case START_RESET_PASSWORD:
@@ -41,10 +42,12 @@ export default function (state=initialState,action){
                 error:false,
             }
         case RESET_PASSWORD_FAILURE:
+            console.log('prueba reducer');
             return{
                 ...state,
-             //   user:{},
+                //user:{},
                 loading:false,
+               
                 error:true,
                 errorInfo:action.payload
             }    

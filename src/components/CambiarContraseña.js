@@ -50,42 +50,31 @@ const useStyles = makeStyles((theme) => ({
 export default function Cambiar(props) {
   const classes = useStyles();
   const dispatch=useDispatch();
+  const error=useSelector(state=>state.user.error); 
+  const errorInfo=useSelector(state=>state.user.errorInfo);
   const user=useSelector(state=>state.user.user);
-  const [userLocal,updateUserLocal]=useState(null);
-  const cambioExitoso=useState(false);
-  const error=useSelector(state=>state.user.error);
   const [actual,updateActual] =useState('');
   const [nueva,updateNueva] =useState('');
   const [nuevaConfirmacion,updateNuevaConfirmacion] =useState('');
   const [cambiar,updateCambiar]=useState(false); 
-  const authUser=(newUser) =>dispatch(authUserAction(newUser));
-  const reset=(user) =>dispatch(resetPasswordAction(user));
-  
-  useEffect(()=>{
-  console.log(user.token);
-  updateUserLocal(user);
-  },[])
-
-  useEffect(()=>{
-    if (user.token&&cambiar===true){
-        console.log(user.token);
-        
-    }
-    else
-    {
-      updateCambiar(false);
-    }
-  },[user.token])
-
-  const resetPassword=async(user)=>{
+  const reset=(user,newPassword) =>dispatch(resetPasswordAction(user,newPassword));
+  const [errorStatus,updateErrorStatus]=useState(false);
+   
+  const resetPassword=async(loginUser)=>{
       await wait(1000);
-      reset(user);
+      const respuesta=  reset(loginUser,nueva,user.token);
+      updateCambiar(true);   
+      await wait(1000);
+    //  console.log(respuesta);
+      return respuesta;
   }
   const wait=async(ms)=> {
     return new Promise(resolve => {
     setTimeout(resolve, ms);
     });
   }
+
+
   return (
 
     <Container component="main" maxWidth="xs">
@@ -99,18 +88,34 @@ export default function Cambiar(props) {
 
         <br/>   
         <form className={classes.form} noValidate
-                             onSubmit={e=> {
+                             onSubmit={e=>{
                                 e.preventDefault();
+                                console.log();
+                                console.log(nuevaConfirmacion);
+                                if (nueva!==nuevaConfirmacion)
+                                { 
+                                  updateCambiar(true);
+                                  updateErrorStatus(true);
+
+                                  return;
+                                }
+                                else{
+                                  updateErrorStatus(false);
+                                  updateCambiar(false);
+                                }
                                 if (user.token)
                                 {   
                                     const loginUser={
                                                 email:user.email,
-                                                password:actual
+                                                password:actual,
+                                                token:user.token
                                                 };
                                                                         
-                                    const response=  authUser(loginUser)   ;                              
-                                    updateCambiar(true);
-                                    console.log(response);
+                                   // const response=  authUser(loginUser)   ;  
+                                 
+                                   const response=   resetPassword(loginUser)   ;                          
+                                                               
+                                    
                                 }
                                 else 
                                 {
@@ -173,14 +178,47 @@ export default function Cambiar(props) {
             color="primary"
             className={classes.submit}
           >
-            Entrar
+            Cambiar
           </Button>
-
+          {cambiar?
+          <div className="AlertCambiar">   
+                    
+                    {errorInfo?
+                      <Alert  severity='error' >
+                        {'No se cambio la contraseña debido a un error. ' + errorInfo.message}
+                      </Alert>
+                      :''  
+                    }
+         </div>
+         :''
+          }
+          {cambiar?
+          <div className="AlertCambiar">   
+                    
+                    {errorStatus===true?
+                      <Alert  severity='error' >
+                        {'La contraseña y la confirmación no coinciden. ' }
+                      </Alert>
+                      :''  
+                    }
+         </div>
+         :''
+          }          
+          {errorStatus===false? cambiar?
+          <div className="AlertCambiar">   
+                    
+                    {error===false ?
+                      <Alert  severity='success' >
+                         La Contraseña ha sido cambiada con exito
+                      </Alert>
+                      :''  
+                    }
+         </div>
+         :'':''
+          }
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
+
     </Container>
   );
 }

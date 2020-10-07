@@ -1,3 +1,4 @@
+import { useRadioGroup } from '@material-ui/core';
 import axios from 'axios';
 //export const URL='http://localhost:53363/api';
 const URL='http://192.168.0.14:5100/api';
@@ -9,7 +10,7 @@ export async function obtenerArchivoFecha(fecha){
       const response = await axios.get(requestUrl);
        
       if (response.statusText!=="OK") {
-          throw new Error('Error getting adverts');
+          throw new Error('Error getting adverts'); 
         }
         
         return response; 
@@ -205,16 +206,25 @@ export const  saveRequest= async (request) =>{
   }
 }
 
-export const  resetPassword= async (request) =>{
-  try {
-    const requestUrl =URL +'/authenticate/reset';
-
-    const response = await axios.put(requestUrl,request);
-
+export const  resetPassword= async (user,NuevoPassword,token) =>{
+  try {       
+    const config = {
+    headers: { 
+         'Authorization': 'Bearer ' + user.token,
+         'NuevoPassword':NuevoPassword 
+       }
+    };
+  
+    const requestUrl =URL +'/cuentas/login/cambiar';
+    console.log(requestUrl);
+    console.log(user);
+    console.log(config);
+    const response = await axios.post(requestUrl,{'email':user.email,'password':user.password},config);
+    console.log(response);
     return response;   
 
   } catch (error) {
-   
+   console.log(error);
     throw(error);
   }
 }

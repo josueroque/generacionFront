@@ -217,16 +217,17 @@ export  function  authUserAction  (user) {
      }
  };
 
- export  function  resetPasswordAction  (user) {
+ export  function  resetPasswordAction  (user,newPassword,token) {
     return async (dispatch)=>{
          dispatch(startResetPassword());
          try {
-             
-          await resetPassword (user);
-
-          dispatch(resetPasswordSuccess(user));
+        //    console.log(token);
+            const response= await resetPassword (user,newPassword,token);
+            console.log(response);  
+            dispatch(resetPasswordSuccess(user));
                
          } catch (error) {
+             console.log(error);
              dispatch(resetPasswordFailure(error));
          }
      }

@@ -292,22 +292,14 @@ export default function Menu() {
             </ListItem>
             <Collapse in={openNested3} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <Link key='Create5' to={{pathname:`/general`}}  className='LinkMenu'>  
+                <Link key='Create5' to={{pathname:`/cambiar`}}  className='LinkMenu'>  
                   <ListItem button className={classes.nested}>
                       <ListItemIcon>
                         <Create />
                         </ListItemIcon>
-                        <ListItemText primary="Creacion de usuarios" />
+                        <ListItemText primary="Cambiar Contraseña" />
                     </ListItem>
                   </Link>
-                <Link key='Create6' to={{pathname:`/search`}}  className='LinkMenu'>    
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <Create />
-                    </ListItemIcon>
-                    <ListItemText primary="Permisos" />
-                  </ListItem>
-                </Link>
               </List>
             </Collapse>            
 

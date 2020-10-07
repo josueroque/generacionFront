@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
 
 
 function Totales(props){
-    const URL='http://localhost:53363/api/';
-    //const URL='http://192.168.0.14:5100/api/';
+    //const URL='http://localhost:53363/api/';
+    const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
