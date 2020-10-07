@@ -56,6 +56,7 @@ export default function Login(props) {
   const [email,updateEmail] =useState('');
   const [password,updatePassword] =useState('');
   const authUser=(newUser) =>dispatch(authUserAction(newUser));
+  const errorInfo=useSelector(state=>state.user.errorInfo);
   
   useEffect(()=>{
     console.log(user);
@@ -135,10 +136,7 @@ export default function Login(props) {
             value={password}
             required
           />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
+
           <Button
             type="submit"
             fullWidth
@@ -148,19 +146,16 @@ export default function Login(props) {
           >
             Entrar
           </Button>
-          {/* <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid> */}
         </form>
+        <div className="AlertCambiar">   
+                    
+                    {error?
+                      <Alert  severity='error' >
+                        Credenciales no validas 
+                      </Alert>
+                      :''  
+                    }
+         </div>
       </div>
       <Box mt={8}>
         <Copyright />

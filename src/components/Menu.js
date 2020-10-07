@@ -195,7 +195,7 @@ export default function Menu() {
         <Divider />
         <List>
     
-         <Link key ={'Login'} to={auth.token? {pathname: `/Login`}:{pathname: `/Logout`}}   className='LinkMenu'  onClick={auth.token ?  ()=>logoutFunction({}) :()=>{}}>  
+         <Link key ={'Login'} to={auth.token? {pathname: `/Login`}:{pathname: `/Logout`}}   className='LinkMenu'  onClick={auth.token ?  ()=>logOut(user) :()=>{}}>  
             <ListItem button  >
                 <ListItemIcon>
                   <LockOpen />
@@ -220,22 +220,7 @@ export default function Menu() {
                         <ListItemText primary="Subir Archivo" />
                     </ListItem>
                   </Link>
-                {/* <Link key='Create' to={{pathname:`/general`}}  className='LinkMenu'>  
-                  <ListItem button className={classes.nested}>
-                      <ListItemIcon>
-                        <Create />
-                        </ListItemIcon>
-                        <ListItemText primary="Valores SCADA" />
-                    </ListItem>
-                  </Link>
-                <Link key='Create2' to={{pathname:`/search`}}  className='LinkMenu'>    
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <Create />
-                    </ListItemIcon>
-                    <ListItemText primary="Datos Comerciales" />
-                  </ListItem>
-                </Link> */}
+
               </List>
             </Collapse>            
 
