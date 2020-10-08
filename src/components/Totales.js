@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
 import Menu from './Menu';
 import { Grid,FormControl } from '@material-ui/core';
@@ -13,7 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExportExcel from 'react-export-excel';
 import MaterialTable,{ MTableToolbar } from 'material-table';
-
+import Loader from './Loader';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,8 +30,8 @@ const useStyles = makeStyles(theme => ({
 
 
 function Totales(props){
-    //const URL='http://localhost:53363/api/';
-    const URL='http://192.168.0.14:5100/api/';
+    const URL='http://localhost:53363/api/';
+    //const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
@@ -42,23 +43,18 @@ function Totales(props){
     const [nombrePlanta,updateNombrePlanta]=useState('Todos');
     const [idFuente,updateIdFuente]=useState(0);
     const [idZona,updateIdZona]=useState(0);
+    const [idTension,updateIdTension]=useState(0);
+    const [idOrigen,updateIdOrigen]=useState(0);
+    const [loading,updateLoading]=useState(false);
+    const user=useSelector(state=>state.user.user);
 
-
-    useEffect(()=>{
-     
-      getPlantas();
-      getFuentes();   
-
-
-    }
-    ,[]);
 
     const ExportarExcelComponente= function(){
         return(
         <div>
         <ExcelFile element={<Button className="Boton" type="submit" variant="contained" color="primary">Exportar a Excel</Button> }fileName="GeneracionPorPlanta">
             {data?
-                <ExcelSheet data={data} name="GeneracionPorPlanta">
+                <ExcelSheet data={data} name="GeneracionTotales">
                 {columns ? columns.map( dataItem=>
                     <ExcelColumn label={dataItem.title} key={dataItem.title} value={dataItem.field} > </ExcelColumn>
                         ):''}  
@@ -69,6 +65,14 @@ function Totales(props){
       </div>   
         )
     }
+    useEffect(()=>{
+     
+        getPlantas();
+        getFuentes();   
+  
+  
+      }
+      ,[]);
 
     const setColumns= async function(){
         const columns2=[
@@ -81,14 +85,14 @@ function Totales(props){
 
     const getPlantas=    async function (){
        const data2= await (axios.get(URL+'plantas'));
-        console.log(data2.data);
+
         updatePlantas(data2.data);
         return data2.data;
         
     }
     const getFuentes=    async function (){
         const data2= await (axios.get(URL+'fuentes'));
-         console.log(data2.data);
+
          updateFuentes(data2.data);
          return data2.data;
          
@@ -108,7 +112,15 @@ function Totales(props){
             case "planta":{
                 updateNombrePlanta(event.target.value);
                 break;
-            }                        
+            }  
+            case "tension":{
+                updateIdTension (event.target.value);
+                break;
+            }  
+            case "origen":{
+                updateIdOrigen (event.target.value);
+                break;
+            }                                  
             default:{
 
             }
@@ -121,6 +133,14 @@ function Totales(props){
         });
       }
       
+      const consultar=async()=>{
+        updateLoading(true);
+        await wait(1000);
+        await getData();
+        await wait(1000);
+        updateLoading(false);
+
+    }
     const getData=async function (){
         let Fecha1= format(
             new Date(fecha1),
@@ -175,12 +195,57 @@ function Totales(props){
                   
               }
           }
+          if (idTension){
 
-        const data2= await (axios.get(urlFiltros));
-       updateColumns( [{ title: 'Planta', field: 'nombre'  },
-                       { title: 'Total', field: 'sum' }]);
+            if (parseInt(idTension)!==0){
+                if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idTension!==0)){
+                    urlFiltros+='&IdTension='+idTension;
+                }
+                else{
+                    urlFiltros+='filtro?totales=true&IdTension='+idTension;
+                }
+                
+            }
+        }
+        
+        if (idOrigen){
 
+            if (parseInt(idOrigen)!==0){
+                if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idOrigen!==0)){
+                    urlFiltros+='&IdOrigen='+idOrigen;
+                }
+                else{
+                    urlFiltros+='filtro?totales=true&IdOrigen='+idOrigen;
+                }
+                
+            }
+        }
+
+
+       let data2;
+       if (user.token)
+       {
+          const config = {
+            headers: { 
+             
+              'Authorization': 'Bearer ' + user.token},
+          };
+           data2= await (axios.get(urlFiltros,config));
+        }
+        else{
+          data2=[];
+          props.history.push('/');
+        }
         console.log(data2);
+       updateColumns( [{ title: 'Planta', field: 'nombre'  },
+                       { title: 'Total', field: 'sum' },
+                       { title: 'Fuente', field: 'fuente' },
+                       { title: 'Tension', field: 'tension' },
+                       { title: 'Zona', field: 'zona' },
+                       { title: 'origen', field: 'origen' }
+                    ]);
+
+    
         updateData(data2.data);  
         return data2;
     }
@@ -191,7 +256,7 @@ function Totales(props){
       <Fragment>
           <Menu></Menu>
 
-          <h2 className="H2ComponenteConsulta">Totales Por Planta</h2>
+          <h2 className="H2ComponenteConsultaTotales">Totales Por Planta</h2>
           
           <FormGroup className="RangoFechas">
         
@@ -296,30 +361,85 @@ function Totales(props){
                 </Select>
              </FormControl>
 
+             <FormControl className={classes.formControl,"ListaConsultaItem"}>
+             <InputLabel id="demo-simple-select-helper-label3" value="list">Nivel de Tensión</InputLabel>
+                <Select
+                    labelId="demo-simple-select-helper-label3"
+                    id="demo-simple-select-helper3"
+                    value={idTension}
+                    name="tension"
+                    onChange={handleChange} 
+                    
+                    
+                >
+                    <MenuItem value="0"key="Todos">
+                    <em>Todos los niveles de tension</em>
+                    </MenuItem>
+                        
+                    <MenuItem key='ALTA' value='1' >ALTA</MenuItem>
+                    <MenuItem key='MEDIA' value='2' >MEDIA</MenuItem>
+                    <MenuItem key='BAJA' value='3' >BAJA</MenuItem>
+
+                </Select>
+             </FormControl>
+
+             <FormControl className={classes.formControl,"ListaConsultaItem"}>
+             <InputLabel id="demo-simple-select-helper-label3" value="list">Origen</InputLabel>
+                <Select
+                    labelId="demo-simple-select-helper-label3"
+                    id="demo-simple-select-helper3"
+                    value={idOrigen}
+                    name="origen"
+                    onChange={handleChange} 
+                    
+                    
+                >
+                    <MenuItem value="0"key="Todos">
+                    <em>Todos los tipos de origen</em>
+                    </MenuItem>
+                        
+                    <MenuItem key='PRIVADO' value='1' >PRIVADO</MenuItem>
+                    <MenuItem key='PUBLICO' value='2' >PUBLICO</MenuItem>
+
+                </Select>
+             </FormControl>
+
+
+
             </FormGroup>
 
          
         <Grid container justify="center" className="GridBotonConsulta">
-                <Button onClick={getData} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
+                <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
                 <ExportarExcelComponente></ExportarExcelComponente>        
         </Grid>  
 
-        <div className="MaterialTable">
-            { data.length>0 ? 
-            
-                <MaterialTable
+       {loading===true?
+            <Fragment>
+                <br/><br/><br/><br/><br/><br/>
+                <Loader ></Loader>
+            </Fragment>
+         :
+            <div className="MaterialTable">
+                { data.length>0 ? 
+                
+                    <MaterialTable
 
-                columns={columns}
-                 data={data}
-                title=""
-                options={{
-                    exportButton: false
-                  }}
-                />
-              
-            :''}
-         </div>
+                    columns={columns}
+                    data={data}
+                    title=""
+                    options={{
+                        exportButton: false,
+                        search: false,
+                        pageSize:20
+                        
+                    }}
+                    />
+                
+                :''}
+            </div>
+        }
             
    
       </Fragment>
