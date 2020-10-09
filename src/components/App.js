@@ -32,7 +32,9 @@ class App  extends Component {
                <Route exact path='/SubestacionEditar' component={SubestacionEditar}  />
                <Route exact path='/Home' component={Home}  />
                <Route exact path='/Cambiar' component={Cambiar}  /> 
-               <Route exact path='/' component={Login}  />        
+               <Route exact path='/Login' component={Login}  />  
+               <Route exact path='/Logout' component={Login}  />   
+               <Route exact path='/' component={Login}  />       
          
           </Switch>
           

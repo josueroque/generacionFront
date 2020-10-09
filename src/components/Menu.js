@@ -232,7 +232,7 @@ export default function Menu() {
               {openNested2 ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={openNested2} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
+              {/* <List component="div" disablePadding>
                 <Link key='Create2' to={{pathname:`/Subestacion`}}  className='LinkMenu'>  
                   <ListItem button className={classes.nested}>
                       <ListItemIcon>
@@ -265,7 +265,7 @@ export default function Menu() {
                     <ListItemText primary="Editar Plantas" />
                   </ListItem>
                 </Link>
-              </List>
+              </List> */}
             </Collapse>            
 
             <ListItem button button onClick={handleClick3}  >

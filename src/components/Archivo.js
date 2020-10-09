@@ -43,11 +43,11 @@ function Archivo(props){
    // const archivoGuardado=useSelector(state=>state.archivos.archivo);
     const archivoConsultado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo,token) =>dispatch(saveArchivoAction(archivo,token));
-    const getArchivo=(fecha) =>dispatch(getArchivoAction(fecha));
+    const getArchivo=(fecha,scada) =>dispatch(getArchivoAction(fecha,scada));
     const deleteArchivo=(id) =>dispatch(deleteArchivoAction(id));
     const [archivo,actualizaArchivo]=useState({});
     const [fecha, actualizaFecha] = useState(null);
-    const [scada,actualizaScada]=useState(true);
+    const [scada,actualizaScada]=useState(null);
     const [id,actualizaId]=useState(null);
     const [savedStatus,updateSavedStatus]=useState(false);
     const [fechaDiferente,updateFechaDiferente]=useState(false);
@@ -56,11 +56,18 @@ function Archivo(props){
 
     const user=useSelector(state=>state.user.user);
     useEffect(()=>{
- 
-      },[archivo])
+      console.log('hola');
+    //  actualizaScada(true);
+      },[])
 
       useEffect(()=>{
-        if (fecha) obtenerArchivo(fecha);
+        if (fecha&&scada) obtenerArchivo(fecha);
+        console.log(scada);
+        updateSavedStatus(false);
+        },[scada])
+
+      useEffect(()=>{
+        if (fecha&&scada) obtenerArchivo(fecha);
         updateSavedStatus(false);
       },[fecha])
 
@@ -89,8 +96,9 @@ function Archivo(props){
           new Date(fecha),
           'MM/dd/yyyy'
         )
+        console.log(scada);
       //  console.log(fechaConFormato.toString());
-        const respuesta= getArchivo(fechaConFormato.toString());
+        const respuesta= getArchivo(fechaConFormato.toString(),scada);
         await wait(1000);
 
         return respuesta;
@@ -170,14 +178,20 @@ function Archivo(props){
                let año=parseInt(archivo[0].name.substring(23,25));
                let fechaValidacion= new Date(fecha );
                console.log(fechaValidacion.getYear());
-               if(dia!==fechaValidacion.getDate()||mes!==(fechaValidacion.getMonth()+1)){
-                 updateFechaDiferente(true);
-                 return;
+               if (scada===true)
+               {
+                  if(dia!==fechaValidacion.getDate()||mes!==(fechaValidacion.getMonth()+1)){
+                    updateFechaDiferente(true);
+                    return;
+                  }
+                  else{
+                    updateFechaDiferente(false);
+                  }
                }
                else{
                 updateFechaDiferente(false);
-               }
               
+               }
               let archivoCreado={
                 ruta:archivo,
                 scada,

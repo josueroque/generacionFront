@@ -1,16 +1,16 @@
 import { useRadioGroup } from '@material-ui/core';
 import axios from 'axios';
-//export const URL='http://localhost:53363/api';
-const URL='http://192.168.0.14:5100/api';
+export const URL='http://localhost:53363/api';
+//const URL='http://192.168.0.14:5100/api';
 
-export async function obtenerArchivoFecha(fecha){  
+export async function obtenerArchivoFecha(fecha,scada){  
     try {
       console.log(fecha);
-      const requestUrl =URL +'/archivos/fecha?fecha='+fecha;
+      const requestUrl =URL +'/archivos/fecha?fecha='+fecha+'&scada='+scada;
       const response = await axios.get(requestUrl);
        
       if (response.statusText!=="OK") {
-          throw new Error('Error getting adverts'); 
+          throw new Error('Error getting file'); 
         }
         
         return response; 
@@ -49,7 +49,7 @@ export async function obtenerArchivoFecha(fecha){
              'Authorization': 'Bearer ' + token
            }
         };
-      const response = await axios.delete(requestUrl,token);
+      const response = await axios.delete(requestUrl,config);
        console.log(response);
       if (response.status!==200&&response.status!==204) {
           throw new Error('Error eliminando archivo');

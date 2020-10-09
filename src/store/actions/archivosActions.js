@@ -74,12 +74,12 @@ export function saveArchivoAction(archivo,token){
 
 };
 
-export function getArchivoAction(fecha){
+export function getArchivoAction(fecha,scada){
     return async (dispatch) =>{
         dispatch(startSaveArchivo());
        try {
         //console.log(fecha);
-         const response=  await obtenerArchivoFecha(fecha);
+         const response=  await obtenerArchivoFecha(fecha,scada);
 
            // console.log(response);
             dispatch(getArchivoSuccess(response));
