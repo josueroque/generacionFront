@@ -40,7 +40,6 @@ function Archivo(props){
     const classes = useStyles();
     const error=useSelector(state=>state.archivos.error);
     const loading=useSelector(state=>state.archivos.loading);
-   // const archivoGuardado=useSelector(state=>state.archivos.archivo);
     const archivoConsultado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo,token) =>dispatch(saveArchivoAction(archivo,token));
     const getArchivo=(fecha,scada) =>dispatch(getArchivoAction(fecha,scada));
@@ -178,6 +177,7 @@ function Archivo(props){
                let año=parseInt(archivo[0].name.substring(23,25));
                let fechaValidacion= new Date(fecha );
                console.log(fechaValidacion.getYear());
+               console.log(scada);
                if (scada===true)
                {
                   if(dia!==fechaValidacion.getDate()||mes!==(fechaValidacion.getMonth()+1)){
@@ -192,6 +192,7 @@ function Archivo(props){
                 updateFechaDiferente(false);
               
                }
+               console.log(fechaDiferente);
               let archivoCreado={
                 ruta:archivo,
                 scada,

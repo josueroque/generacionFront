@@ -1,7 +1,7 @@
 import { useRadioGroup } from '@material-ui/core';
 import axios from 'axios';
-export const URL='http://localhost:53363/api';
-//const URL='http://192.168.0.14:5100/api';
+//export const URL='http://localhost:53363/api';
+const URL='http://192.168.0.14:5100/api';
 
 export async function obtenerArchivoFecha(fecha,scada){  
     try {

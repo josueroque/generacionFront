@@ -11,6 +11,7 @@ import SubestacionEditar from './SubestacionEditar';
 import Totales from './Totales';
 import Login from './Login';
 import Cambiar from './CambiarContraseña';
+import DatosComercialesTotales from './DatosComercialesTotales';
 
 class App  extends Component {
 
@@ -25,6 +26,7 @@ class App  extends Component {
 
             {/* <Route exact path='/Login' component={Login}  /> */}
             {/* <Route exact path='/' component={Home}  /> */}
+            <Route exact path='/DatosComercialesTotales' component={DatosComercialesTotales}  /> 
                 <Route exact path='/Totales' component={Totales}  /> 
                 <Route exact path='/ScadaValores' component={ScadaValores}  /> 
                <Route exact path='/Archivo' component={Archivo}  />

@@ -90,7 +90,7 @@ export default function(state=initialState,action){
                 errorInfo:action.payload
             }                     
         default:
-            return state;
+            return {...state};
 
     }
 }

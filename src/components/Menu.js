@@ -313,6 +313,15 @@ export default function Menu() {
                     <ListItemText primary="Totales" />
                   </ListItem>
                 </Link>
+                <Link key='Create9' to={{pathname:`/DatosComercialesTotales`}}  className='LinkMenu'>    
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <EvStation />
+                    </ListItemIcon>
+                    <ListItemText primary="Totales Datos Comerciales" />
+                  </ListItem>
+                </Link>
+
               </List>
             </Collapse>            
 
