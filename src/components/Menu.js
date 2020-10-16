@@ -302,7 +302,7 @@ export default function Menu() {
                       <ListItemIcon>
                         <Power />
                         </ListItemIcon>
-                        <ListItemText primary="Produccion horaria por Planta" />
+                        <ListItemText primary="Produccion Horaria por Planta" />
                     </ListItem>
                   </Link>
                 <Link key='Create8' to={{pathname:`/totales`}}  className='LinkMenu'>    
@@ -313,6 +313,14 @@ export default function Menu() {
                     <ListItemText primary="Totales" />
                   </ListItem>
                 </Link>
+                <Link key='Create9' to={{pathname:`/DatosComerciales`}}  className='LinkMenu'>    
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                    <Power />
+                    </ListItemIcon>
+                    <ListItemText primary="Producción Horaria Datos Comerciales" />
+                  </ListItem>
+                </Link>                
                 <Link key='Create9' to={{pathname:`/DatosComercialesTotales`}}  className='LinkMenu'>    
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>

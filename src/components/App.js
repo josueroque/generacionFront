@@ -11,6 +11,7 @@ import SubestacionEditar from './SubestacionEditar';
 import Totales from './Totales';
 import Login from './Login';
 import Cambiar from './CambiarContraseña';
+import DatosComerciales from './DatosComerciales';
 import DatosComercialesTotales from './DatosComercialesTotales';
 
 class App  extends Component {
@@ -22,10 +23,7 @@ class App  extends Component {
       
           <Switch>
 
-            {/* <Route exact path='/edit/:id' component={EditAd}  /> */}
-
-            {/* <Route exact path='/Login' component={Login}  /> */}
-            {/* <Route exact path='/' component={Home}  /> */}
+            <Route exact path='/DatosComerciales' component={DatosComerciales}  />
             <Route exact path='/DatosComercialesTotales' component={DatosComercialesTotales}  /> 
                 <Route exact path='/Totales' component={Totales}  /> 
                 <Route exact path='/ScadaValores' component={ScadaValores}  /> 
