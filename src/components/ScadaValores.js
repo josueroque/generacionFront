@@ -28,8 +28,8 @@ const useStyles = makeStyles(theme => ({
   const ExcelColumn=ExportExcel.ExcelColumn;
   
 function ScadaValores(props){
-   const URL='http://localhost:53363/api/';
-   //const URL='http://192.168.0.14:5100/api/';
+ //  const URL='http://localhost:53363/api/';
+   const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fecha1,updateFecha1]=useState(null);

@@ -30,8 +30,8 @@ const useStyles = makeStyles(theme => ({
 
 
 function DatosComercialesTotales(props){
-    const URL='http://localhost:53363/api/';
-    //const URL='http://192.168.0.14:5100/api/';
+   // const URL='http://localhost:53363/api/';
+    const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
@@ -237,7 +237,7 @@ function DatosComercialesTotales(props){
           props.history.push('/');
         }
         console.log(data2);
-       updateColumns( [{ title: 'Planta', field: 'nombre'  },
+       updateColumns( [{ title: 'Planta', field: 'nombrePlanta'  },
                        { title: 'Entregado', field: 'entregado' },
                        { title: 'Recibido', field: 'recibido' },
                        { title: 'Fuente', field: 'fuente' },
@@ -252,7 +252,7 @@ function DatosComercialesTotales(props){
     }
     
 
- 
+ console.log(plantas);
     return(
       <Fragment>
           <Menu></Menu>
@@ -314,7 +314,7 @@ function DatosComercialesTotales(props){
                     <em>Todas las plantas</em>
                     </MenuItem>
                     {plantas ? plantas.map( planta=>
-                    <MenuItem key={planta.Nombre} value={planta.Nombre} >{planta.Nombre}</MenuItem>
+                    <MenuItem key={planta.nombre} value={planta.nombre} >{planta.nombre}</MenuItem>
                         ):''}  
                 </Select>
              </FormControl>
