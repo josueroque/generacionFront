@@ -1,19 +1,19 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 import Menu from './Menu';
 import { Grid,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
 import { Button} from '@material-ui/core'; 
-import { makeStyles,useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';  
 import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ExportExcel from 'react-export-excel';
-import MaterialTable,{ MTableToolbar } from 'material-table';
+import ExportarExcel from './ExportarExcel';
+import MaterialTable from 'material-table';
 import Loader from './Loader';
 
 const useStyles = makeStyles(theme => ({
@@ -24,10 +24,6 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
-  const ExcelFile=ExportExcel.ExcelFile;
-  const ExcelSheet=ExportExcel.ExcelSheet;
-  const ExcelColumn=ExportExcel.ExcelColumn;
-
 
 function DatosComercialesTotales(props){
    // const URL='http://localhost:53363/api/';
@@ -48,23 +44,6 @@ function DatosComercialesTotales(props){
     const [loading,updateLoading]=useState(false);
     const user=useSelector(state=>state.user.user);
 
-
-    const ExportarExcelComponente= function(){
-        return(
-        <div>
-        <ExcelFile element={<Button className="Boton" type="submit" variant="contained" color="primary">Exportar a Excel</Button> }fileName="GeneracionPorPlanta">
-            {data?
-                <ExcelSheet data={data} name="GeneracionTotales">
-                {columns ? columns.map( dataItem=>
-                    <ExcelColumn label={dataItem.title} key={dataItem.title} value={dataItem.field} > </ExcelColumn>
-                        ):''}  
-                
-                </ExcelSheet>:''
-            }
-        </ExcelFile>
-      </div>   
-        )
-    }
     useEffect(()=>{
      
         getPlantas();
@@ -99,7 +78,7 @@ function DatosComercialesTotales(props){
      }
     
     const handleChange=async function(event){
-//console.log(event.target);
+
         switch (event.target.name){
             case "zona":{
                 updateIdZona(event.target.value);
@@ -125,7 +104,7 @@ function DatosComercialesTotales(props){
 
             }
         }
-       // updateNombrePlanta(event.target.value);
+   
     }
     const wait=async(ms)=> {
         return new Promise(resolve => {
@@ -161,7 +140,7 @@ function DatosComercialesTotales(props){
            fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
         }
         if (nombrePlanta){
-          //  console.log(nombrePlanta);
+         
             if (nombrePlanta!=='Todos'){
                 if (fecha1 || fecha2){
                     urlFiltros+='&NombrePlanta='+nombrePlanta;
@@ -172,7 +151,7 @@ function DatosComercialesTotales(props){
             }
         }
         if (idZona){
-            //  console.log(nombrePlanta);
+
               if (parseInt(idZona)!==0){
                   if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')){
                       urlFiltros+='&IdZona='+idZona;
@@ -251,8 +230,6 @@ function DatosComercialesTotales(props){
         return data2;
     }
     
-
- console.log(plantas);
     return(
       <Fragment>
           <Menu></Menu>
@@ -307,8 +284,7 @@ function DatosComercialesTotales(props){
                     value={nombrePlanta}
                     name="planta"
                     onChange={handleChange}
-                   
-                    
+                                      
                 >
                     <MenuItem value="Todos" key="Todos">
                     <em>Todas las plantas</em>
@@ -327,8 +303,7 @@ function DatosComercialesTotales(props){
                     value={idFuente}
                     name="fuente"
                     onChange={handleChange} 
-                    
-                    
+                                       
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todas los tipos</em>
@@ -405,15 +380,13 @@ function DatosComercialesTotales(props){
                 </Select>
              </FormControl>
 
-
-
             </FormGroup>
 
          
         <Grid container justify="center" className="GridBotonConsulta">
                 <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
-                <ExportarExcelComponente></ExportarExcelComponente>        
+                <ExportarExcel data={data} columns={columns}></ExportarExcel>        
         </Grid>  
 
        {loading===true?
@@ -424,18 +397,16 @@ function DatosComercialesTotales(props){
          :
             <div className="MaterialTable">
                 { data.length>0 ? 
-                
                     <MaterialTable
-
-                    columns={columns}
-                    data={data}
-                    title=""
-                    options={{
-                        exportButton: false,
-                        search: false,
-                        pageSize:20
-                        
-                    }}
+                        columns={columns}
+                        data={data}
+                        title=""
+                        options={{
+                            exportButton: false,
+                            search: false,
+                            pageSize:20
+                            
+                        }}
                     />
                 
                 :''}

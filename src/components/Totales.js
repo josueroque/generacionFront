@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ExportExcel from 'react-export-excel';
+import ExportarExcel from './ExportarExcel';
 import MaterialTable,{ MTableToolbar } from 'material-table';
 import Loader from './Loader';
 
@@ -24,9 +24,7 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
-  const ExcelFile=ExportExcel.ExcelFile;
-  const ExcelSheet=ExportExcel.ExcelSheet;
-  const ExcelColumn=ExportExcel.ExcelColumn;
+
 
 
 function Totales(props){
@@ -49,22 +47,7 @@ function Totales(props){
     const user=useSelector(state=>state.user.user);
 
 
-    const ExportarExcelComponente= function(){
-        return(
-        <div>
-        <ExcelFile element={<Button className="Boton" type="submit" variant="contained" color="primary">Exportar a Excel</Button> }fileName="GeneracionPorPlanta">
-            {data?
-                <ExcelSheet data={data} name="GeneracionTotales">
-                {columns ? columns.map( dataItem=>
-                    <ExcelColumn label={dataItem.title} key={dataItem.title} value={dataItem.field} > </ExcelColumn>
-                        ):''}  
-                
-                </ExcelSheet>:''
-            }
-        </ExcelFile>
-      </div>   
-        )
-    }
+
     useEffect(()=>{
      
         getPlantas();
@@ -220,7 +203,6 @@ function Totales(props){
                 
             }
         }
-
 
        let data2;
        if (user.token)
@@ -404,15 +386,12 @@ function Totales(props){
                 </Select>
              </FormControl>
 
-
-
             </FormGroup>
-
-         
+        
         <Grid container justify="center" className="GridBotonConsulta">
                 <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
-                <ExportarExcelComponente></ExportarExcelComponente>        
+                <ExportarExcel data={data} columns={columns} ></ExportarExcel>        
         </Grid>  
 
        {loading===true?

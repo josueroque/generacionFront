@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ExportExcel from 'react-export-excel';
+import ExportarExcel from './ExportarExcel';
 import Loader from './Loader';
 const useStyles = makeStyles(theme => ({
     root: {
@@ -23,13 +23,11 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
-  const ExcelFile=ExportExcel.ExcelFile;
-  const ExcelSheet=ExportExcel.ExcelSheet;
-  const ExcelColumn=ExportExcel.ExcelColumn;
+
   
 function ScadaValores(props){
- //  const URL='http://localhost:53363/api/';
-   const URL='http://192.168.0.14:5100/api/';
+  // const URL='http://localhost:53363/api/';
+    const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
@@ -61,22 +59,6 @@ function ScadaValores(props){
        
     }
 
-    const ExportarExcelComponente= function(){
-        return(
-        <div>
-        <ExcelFile element={<Button className="Boton" type="submit" variant="contained" color="primary">Exportar a Excel</Button> }fileName="GeneracionPorPlanta">
-            {data?
-                <ExcelSheet data={data} name="GeneracionPorPlanta">
-                {columns ? columns.map( dataItem=>
-                    <ExcelColumn label={dataItem.title} key={dataItem.title} value={dataItem.field} > </ExcelColumn>
-                        ):''}  
-                
-                </ExcelSheet>:''
-            }
-        </ExcelFile>
-      </div>   
-        )
-    }
 
     const wait=async(ms)=> {
         return new Promise(resolve => {
@@ -424,7 +406,7 @@ function ScadaValores(props){
         <Grid container justify="center" className="GridBotonConsulta">
                 <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
-                <ExportarExcelComponente></ExportarExcelComponente>        
+                <ExportarExcel data={data} columns={columns} ></ExportarExcel>           
         </Grid>  
        
          <div className="MaterialTable">

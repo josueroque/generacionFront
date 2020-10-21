@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import {useDispatch,useSelector} from 'react-redux';
-import MaterialTable,{ MTableToolbar } from 'material-table';
-import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
+import {useSelector} from 'react-redux';
+import MaterialTable from 'material-table';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import axios from 'axios';
 import Menu from './Menu';
-import { Grid,FormLabel,RadioGroup,Radio,FormControlLabel,FormControl } from '@material-ui/core';
+import { Grid,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
 import { Button} from '@material-ui/core'; 
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import ExportExcel from 'react-export-excel';
+import ExportarExcel from './ExportarExcel';
 import Loader from './Loader';
 const useStyles = makeStyles(theme => ({
     root: {
@@ -23,9 +23,6 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
-  const ExcelFile=ExportExcel.ExcelFile;
-  const ExcelSheet=ExportExcel.ExcelSheet;
-  const ExcelColumn=ExportExcel.ExcelColumn;
   
 function DatosComerciales(props){
   // const URL='http://localhost:53363/api/';
@@ -59,23 +56,6 @@ function DatosComerciales(props){
        updateFuentes(data2.data);
        return data2.data;
        
-    }
-
-    const ExportarExcelComponente= function(){
-        return(
-        <div>
-        <ExcelFile element={<Button className="Boton" type="submit" variant="contained" color="primary">Exportar a Excel</Button> }fileName="GeneracionPorPlanta">
-            {data?
-                <ExcelSheet data={data} name="GeneracionPorPlanta">
-                {columns ? columns.map( dataItem=>
-                    <ExcelColumn label={dataItem.title} key={dataItem.title} value={dataItem.field} > </ExcelColumn>
-                        ):''}  
-                
-                </ExcelSheet>:''
-            }
-        </ExcelFile>
-      </div>   
-        )
     }
 
     const wait=async(ms)=> {
@@ -150,7 +130,7 @@ function DatosComerciales(props){
              fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
           }
           if (nombrePlanta){
-            //  console.log(nombrePlanta);
+         
               if (nombrePlanta!=='Todos'){
                   if (fecha1 || fecha2){
                       urlFiltros+='&NombrePlanta='+nombrePlanta;
@@ -161,7 +141,7 @@ function DatosComerciales(props){
               }
           }
           if (idZona){
-              //  console.log(nombrePlanta);
+          
                 if (parseInt(idZona)!==0){
                     if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')){
                         urlFiltros+='&IdZona='+idZona;
@@ -224,10 +204,8 @@ function DatosComerciales(props){
         data2=[];
         props.history.push('/');
       }
-        
-      
+             
 
-       console.log(data2.data);
 
         const columns2=[
             { title: 'Fecha', field: 'fecha'},
@@ -239,19 +217,7 @@ function DatosComerciales(props){
          return p.intercambio===false;
        })
        
-       console.log(plantas2);
-
-
-        // for (let item6 of plantas2){
-        //   // console.log(item6);
-        //     if (data2.data[0]) {
-        //         let existe = data2.data.filter(function (o) {
-        //             return o.hasOwnProperty(item6.nombre);
-        //         }).length > 0;
-                
-        //         if (existe ===true) columns2.push({ title: item6.nombre, field: item6.nombre,type:"numeric"});
-        //     } 
-        // }
+   
 
         updateColumns( [{ title: 'Planta', field: 'nombrePlanta'  },
             { title: 'Fecha', field: 'fecha' },
@@ -260,10 +226,7 @@ function DatosComerciales(props){
             { title: 'Recibido', field: 'recibido'},
            
         ]);
-        console.log(columns2);
-       // updateColumns(columns2);
 
-       // updateData(dataCruzada);
        updateData(data2.data);
      
         return ;
@@ -432,7 +395,7 @@ function DatosComerciales(props){
         <Grid container justify="center" className="GridBotonConsulta">
                 <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
-                <ExportarExcelComponente></ExportarExcelComponente>        
+                <ExportarExcel data={data} columns={columns} ></ExportarExcel>          
         </Grid>  
        
          <div className="MaterialTable">

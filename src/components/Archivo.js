@@ -1,22 +1,14 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import {useDispatch,useSelector} from 'react-redux';
-//import SideBar from './SideBar';
-//import { css } from '@emotion/core';
 import 'date-fns';
 import { saveArchivoAction,getArchivoAction,deleteArchivoAction } from '../store/actions/archivosActions';
-import { Container } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
-import { MenuItem } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
-import { Button,FormLabel,RadioGroup,Radio,FormControlLabel } from '@material-ui/core';
+import { Button,RadioGroup,Radio,FormControlLabel } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Select from '@material-ui/core/Select';
 import MuiAlert from '@material-ui/lab/Alert';
-import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';  
 import { format } from 'date-fns';
 import Loader from './Loader';
@@ -43,7 +35,7 @@ function Archivo(props){
     const archivoConsultado=useSelector(state=>state.archivos.archivo);
     const saveArchivo=(archivo,token) =>dispatch(saveArchivoAction(archivo,token));
     const getArchivo=(fecha,scada) =>dispatch(getArchivoAction(fecha,scada));
-    const deleteArchivo=(id) =>dispatch(deleteArchivoAction(id));
+    const deleteArchivo=(id,token) =>dispatch(deleteArchivoAction(id,token));
     const [archivo,actualizaArchivo]=useState({});
     const [fecha, actualizaFecha] = useState(null);
     const [scada,actualizaScada]=useState(null);
@@ -61,7 +53,7 @@ function Archivo(props){
 
       useEffect(()=>{
         if (fecha&&scada) obtenerArchivo(fecha);
-        console.log(scada);
+     
         updateSavedStatus(false);
         },[scada])
 
@@ -71,7 +63,7 @@ function Archivo(props){
       },[fecha])
 
       useEffect(()=>{
-        console.log(archivoConsultado);
+       
         if (archivoConsultado.request)
           {
             archivoConsultado.request.status===200 ? actualizaGuardarDesactivado(true):actualizaGuardarDesactivado(false);
@@ -82,9 +74,9 @@ function Archivo(props){
           {
             actualizaGuardarDesactivado(false);
             actualizaEliminarDesactivado(true);
-           // updateFechaDiferente(false);
+        
           }
-       // actualizaArchivo(respuesta); 
+
 
 
       },[archivoConsultado])
@@ -96,15 +88,14 @@ function Archivo(props){
           'MM/dd/yyyy'
         )
         console.log(scada);
-      //  console.log(fechaConFormato.toString());
+
         const respuesta= getArchivo(fechaConFormato.toString(),scada);
         await wait(1000);
-
         return respuesta;
       }
 
       const handleChange = (event) => {
-       // console.log(event.target.value);
+
         actualizaScada(event.target.value);
       };
     
@@ -119,7 +110,7 @@ function Archivo(props){
         if (user.token){
         const respuesta=  saveArchivo(archivoFile,user.token);
         await wait(1000);
-    //    console.log(archivoGuardado);
+   
         updateSavedStatus(true);
         return respuesta;
         }
@@ -129,21 +120,20 @@ function Archivo(props){
       }
       
       const tomarArchivo=(e)=> {
-        //  console.log(e.target.files);
+        
           actualizaArchivo(e.target.files);
-          console.log(e.target.files);
+         
           updateSavedStatus(false);
       } 
       
       const eliminarArchivo=async()=>{
-        //  console.log('desde funcion');
-       //   console.log(archivo.ruta);
+
           await wait(1000);
-         // console.log(archivoConsultado);
+
          if (user.token){
           const respuesta=  deleteArchivo(archivoConsultado.data.id,user.token);
           await wait(1000);
-          console.log(respuesta);
+      
           updateSavedStatus(true);
           return respuesta;
          }
