@@ -1,4 +1,4 @@
-import React, { Fragment,useEffect,useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import {useDispatch,useSelector} from 'react-redux';
 import {authUserAction} from '../store/actions/usersActions';
 import Avatar from '@material-ui/core/Avatar';
@@ -59,7 +59,7 @@ export default function Login(props) {
   const errorInfo=useSelector(state=>state.user.errorInfo);
   
   useEffect(()=>{
-    console.log(user);
+   
       if (user.token && error===false){
           
           props.history.push("/Home");
@@ -99,7 +99,7 @@ export default function Login(props) {
                                             };
                                                                      
                                 const response=  authUser(loginUser);
-                                console.log(response);
+                            
                                 
          
         

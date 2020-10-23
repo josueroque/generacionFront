@@ -1,6 +1,120 @@
 import axios from 'axios';
+import { format } from 'date-fns';
 //export const URL='http://localhost:53363/api';
 const URL='http://192.168.0.14:5100/api';
+
+export async function consultar(totales,scada,token,filtro ){  
+  try {
+  
+    let Fecha1= format(
+      new Date(filtro.fecha1),
+      'MM/dd/yyyy'
+     )
+  
+    let Fecha2= format(
+      new Date(filtro.fecha2),
+      'MM/dd/yyyy'
+    )
+    
+    let urlFiltros;
+    
+    if (scada===true){
+       urlFiltros=URL+'/scadavalores/';
+    }   
+    else{
+       urlFiltros=URL+'/comercialdatos/';
+    } 
+    
+    if (filtro.fecha1){
+        urlFiltros+='filtro?totales='+totales+'&FechaInicial='+Fecha1;
+    }
+    
+    if (filtro.fecha2){
+       filtro.fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
+    }
+    
+    if (filtro.nombrePlanta){
+        if (filtro.nombrePlanta!=='Todos'){
+            if (filtro.fecha1 || filtro.fecha2){
+                urlFiltros+='&NombrePlanta='+filtro.nombrePlanta;
+            }
+            else{
+                urlFiltros+='filtro?totales='+totales+'&NombrePlanta='+filtro.nombrePlanta;
+            }
+        }
+    }
+
+    if (filtro.idZona){
+          if (parseInt(filtro.idZona)!==0){
+              if (filtro.fecha1 || filtro.fecha2 ||(filtro.nombrePlanta!=='Todos')){
+                  urlFiltros+='&IdZona='+filtro.idZona;
+              }
+              else{
+                  urlFiltros+='filtro?totales='+totales+'&IdZona='+filtro.idZona;
+              }
+          }
+      }
+
+      if (filtro.idFuente){
+
+          if (parseInt(filtro.idFuente)!==0){
+              if (filtro.fecha1 || filtro.fecha2 ||(filtro.nombrePlanta!=='Todos')||(filtro.idZona!==0)){
+                  urlFiltros+='&IdFuente='+filtro.idFuente;
+              }
+              else{
+                  urlFiltros+='filtro?totales='+totales+'&IdFuente='+filtro.idFuente;
+              }
+              
+          }
+      }
+      if (filtro.idTension){
+
+        if (parseInt(filtro.idTension)!==0){
+            if (filtro.fecha1 || filtro.fecha2 ||(filtro.nombrePlanta!=='Todos')||(filtro.idTension!==0)){
+                urlFiltros+='&IdTension='+filtro.idTension;
+            }
+            else{
+                urlFiltros+='filtro?totales='+totales+'&IdTension='+filtro.idTension;
+            }
+         }
+    }
+    
+    if (filtro.idOrigen){
+
+        if (parseInt(filtro.idOrigen)!==0){
+            if (filtro.fecha1 || filtro.fecha2 ||(filtro.nombrePlanta!=='Todos')||(filtro.idOrigen!==0)){
+                urlFiltros+='&IdOrigen='+filtro.idOrigen;
+            }
+            else{
+                urlFiltros+='filtro?totales='+totales+'&IdOrigen='+filtro.idOrigen;
+            }
+            
+        }
+    }
+
+    const config = {
+    
+    headers: { 
+       
+        'Authorization': 'Bearer ' + token},
+    };
+    
+    console.log(urlFiltros);
+    const response= await (axios.get(urlFiltros,config));
+     
+    if (response.statusText!=="OK") {
+        throw new Error('Error getting data'); 
+     }
+      
+      return response; 
+    }
+  
+    catch(error){
+     console.error(error.response);
+     throw error;
+ }
+}
+
 
 export async function obtenerArchivoFecha(fecha,scada){  
     try {
@@ -43,7 +157,7 @@ export async function obtenerArchivoFecha(fecha,scada){
     try {
       
       const requestUrl =URL +'/archivos/'+id;
-      console.log(token);
+  
       const config = {
         headers: { 
              'Authorization': 'Bearer ' + token

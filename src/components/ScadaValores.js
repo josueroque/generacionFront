@@ -1,20 +1,21 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import {useDispatch,useSelector} from 'react-redux';
-import MaterialTable,{ MTableToolbar } from 'material-table';
-import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
+import MaterialTable  from  'material-table';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import axios from 'axios';
 import Menu from './Menu';
-import { Grid,FormLabel,RadioGroup,Radio,FormControlLabel,FormControl } from '@material-ui/core';
+import { Grid,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
 import { Button} from '@material-ui/core'; 
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';  
-import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExportarExcel from './ExportarExcel';
 import Loader from './Loader';
+import { getScadaValoresAction } from '../store/actions/scadaValoresActions';
+
 const useStyles = makeStyles(theme => ({
     root: {
       width: '100%',
@@ -23,11 +24,10 @@ const useStyles = makeStyles(theme => ({
       },
     },
   }));
-
   
 function ScadaValores(props){
-  // const URL='http://localhost:53363/api/';
     const URL='http://192.168.0.14:5100/api/';
+    const dispatch=useDispatch();
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
@@ -41,8 +41,44 @@ function ScadaValores(props){
     const [idTension,updateIdTension]=useState(0);
     const [idOrigen,updateIdOrigen]=useState(0);
     const [loading,updateLoading]=useState(false);
+    const error=useSelector(state=>state.scadaValores.error);
+    const scadaValores=useSelector(state=>state.scadaValores.scadaValores);
+    const getScadaValores=(filtro,token,totales) =>dispatch(getScadaValoresAction(filtro,token,totales));
     const user=useSelector(state=>state.user.user);
 
+    useEffect(()=>{
+    
+              
+      if (scadaValores.data&&(fecha1||fecha2)){
+        const columns2=[
+            { title: 'Fecha', field: 'fecha'},
+            { title: 'Hora', field: 'hora' }
+           
+        ];
+
+       let plantas2=plantas.filter(p=>{
+         return p.intercambio===false;
+       })
+
+        let data2=scadaValores;
+        
+            for (let item6 of plantas2){
+            // console.log(item6);
+                if (data2.data[0]) {
+                    let existe = data2.data.filter(function (o) {
+                        return o.hasOwnProperty(item6.nombre);
+                    }).length > 0;
+                    
+                    if (existe ===true) columns2.push({ title: item6.nombre, field: item6.nombre,type:"numeric"});
+                } 
+            }
+           console.log(columns2);
+           if (data2.data.length>0) updateColumns(columns2);
+            updateData(data2.data);
+        }
+        updateLoading(false);
+
+    },[scadaValores])
 
     useEffect(()=>{
      
@@ -59,7 +95,6 @@ function ScadaValores(props){
        
     }
 
-
     const wait=async(ms)=> {
         return new Promise(resolve => {
         setTimeout(resolve, ms);
@@ -75,31 +110,31 @@ function ScadaValores(props){
     }
     
     const handleChange=async function(event){
-      switch (event.target.name){
-        case "zona":{
-            updateIdZona(event.target.value);
-            break;
-        }
-        case "fuente":{
-            updateIdFuente(event.target.value);
-            break;
-        }
-        case "planta":{
-            updateNombrePlanta(event.target.value);
-            break;
-        }  
-        case "tension":{
-            updateIdTension (event.target.value);
-            break;
-        }  
-        case "origen":{
-            updateIdOrigen (event.target.value);
-            break;
-        }                                  
-        default:{
+        switch (event.target.name){
+            case "zona":{
+                updateIdZona(event.target.value);
+                break;
+            }
+            case "fuente":{
+                updateIdFuente(event.target.value);
+                break;
+            }
+            case "planta":{
+                updateNombrePlanta(event.target.value);
+                break;
+            }  
+            case "tension":{
+                updateIdTension (event.target.value);
+                break;
+            }  
+            case "origen":{
+                updateIdOrigen (event.target.value);
+                break;
+            }                                  
+            default:{
 
+            }
         }
-    }
     }
 
     const consultar=async()=>{
@@ -107,143 +142,33 @@ function ScadaValores(props){
         await wait(1000);
         await getData();
         await wait(1000);
-        updateLoading(false);
-
     }
 
     const getData=async function (){
-      
-        let Fecha1= format(
-            new Date(fecha1),
-            'MM/dd/yyyy'
-          )
+        updateData([]);
 
-        let Fecha2= format(
-            new Date(fecha2),
-            'MM/dd/yyyy'
-          )
-
-          let urlFiltros=URL+'scadavalores/';
-    
-          if (fecha1){
-              urlFiltros+='filtro?totales=false&FechaInicial='+Fecha1;
-          }
-          if (fecha2){
-             fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
-          }
-          if (nombrePlanta){
-            //  console.log(nombrePlanta);
-              if (nombrePlanta!=='Todos'){
-                  if (fecha1 || fecha2){
-                      urlFiltros+='&NombrePlanta='+nombrePlanta;
-                  }
-                  else{
-                      urlFiltros+='filtro?totales=false&NombrePlanta='+nombrePlanta;
-                  }
-              }
-          }
-          if (idZona){
-              //  console.log(nombrePlanta);
-                if (parseInt(idZona)!==0){
-                    if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')){
-                        urlFiltros+='&IdZona='+idZona;
-                    }
-                    else{
-                        urlFiltros+='filtro?totales=false&IdZona='+idZona;
-                    }
-                }
-            }
-  
-            if (idFuente){
-  
-                if (parseInt(idFuente)!==0){
-                    if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idZona!==0)){
-                        urlFiltros+='&IdFuente='+idFuente;
-                    }
-                    else{
-                        urlFiltros+='filtro?totales=false&IdFuente='+idFuente;
-                    }
-                    
-                }
-            }
-            if (idTension){
-  
-              if (parseInt(idTension)!==0){
-                  if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idTension!==0)){
-                      urlFiltros+='&IdTension='+idTension;
-                  }
-                  else{
-                      urlFiltros+='filtro?totales=false&IdTension='+idTension;
-                  }
-                  
-              }
-          }
-          
-          if (idOrigen){
-  
-              if (parseInt(idOrigen)!==0){
-                  if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idOrigen!==0)){
-                      urlFiltros+='&IdOrigen='+idOrigen;
-                  }
-                  else{
-                      urlFiltros+='filtro?totales=false&IdOrigen='+idOrigen;
-                  }
-                  
-              }
-          }
-     console.log(urlFiltros);  
-     let data2;
-     if (user.token)
-     {
-        const config = {
-          headers: { 
+          let filtro={};  
            
-            'Authorization': 'Bearer ' + user.token},
-        };
-         data2= await (axios.get(urlFiltros,config));
-      }
+          if (fecha1) filtro.fecha1=fecha1;
+          if (fecha2) filtro.fecha2=fecha2;
+          if (nombrePlanta) filtro.nombrePlanta=nombrePlanta;
+          if (idZona) filtro.idZona=idZona;
+          if (idFuente) filtro.idFuente=idFuente;
+          if (idTension) filtro.idTension=idTension;
+          if (idOrigen) filtro.idOrigen=idOrigen;
+   
+      
+        if (user.token)
+        {
+            getScadaValores(filtro,user.token,false);
+        }
       else{
-        data2=[];
+        //data2=[];
         props.history.push('/');
       }
         
-      
-
-       console.log(data2.data[0]);
-
-        const columns2=[
-            { title: 'Fecha', field: 'fecha'},
-            { title: 'Hora', field: 'hora' }
-           
-        ];
-
-       let plantas2=plantas.filter(p=>{
-         return p.intercambio===false;
-       })
-       
-       console.log(plantas2);
-
-
-        for (let item6 of plantas2){
-          // console.log(item6);
-            if (data2.data[0]) {
-                let existe = data2.data.filter(function (o) {
-                    return o.hasOwnProperty(item6.nombre);
-                }).length > 0;
-                
-                if (existe ===true) columns2.push({ title: item6.nombre, field: item6.nombre,type:"numeric"});
-            } 
-        }
-        console.log(columns2);
-        updateColumns(columns2);
-
-       // updateData(dataCruzada);
-       updateData(data2.data);
-     
-        return ;
     }
-    
- 
+     
     return(
       <Fragment>
           <Menu></Menu>
@@ -303,7 +228,7 @@ function ScadaValores(props){
                     <em>Todas las plantas</em>
                     </MenuItem>
                     {plantas ? plantas.map( planta=>
-                    <MenuItem key={planta.rotulacionSCADA} value={planta.rotulacionSCADA} >{planta.rotulacionSCADA}</MenuItem>
+                    <MenuItem key={planta.rotulacionSCADA} value={planta.nombre} >{planta.nombre}</MenuItem>
                         ):''}  
                 </Select>
              </FormControl>
@@ -358,8 +283,7 @@ function ScadaValores(props){
                     value={idTension}
                     name="tension"
                     onChange={handleChange} 
-                    
-                    
+                                        
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todos los niveles de tension</em>
@@ -418,7 +342,8 @@ function ScadaValores(props){
                  data={data}
                 title=""
                 options={{
-                    exportButton: false
+                    exportButton: false,
+                    search:false
                   }}
                 />
               
