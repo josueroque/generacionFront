@@ -15,7 +15,9 @@ const persistConfig = {
     storage,
     blacklist: [
         'userReducer',
-        'archivosReducer'
+        'archivos',
+        'plantas',
+        'fuentes'
       ],
     stateReconciler: hardSet,  
   };

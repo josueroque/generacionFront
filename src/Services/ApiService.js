@@ -218,6 +218,43 @@ export async function obtenerSubestaciones(){
  }
 }
 
+export async function obtenerPlantas(){  
+  try {
+    
+    const requestUrl =URL +'/plantas';
+    const response = await axios.get(requestUrl);
+     
+    if (response.statusText!=="OK") {
+        throw new Error('Error ');
+      }
+      return response; 
+    }
+  
+    catch(error){
+     console.error(error.response);
+     throw error;
+ }
+}
+
+export async function obtenerFuentes(){  
+  try {
+    
+    const requestUrl =URL +'/fuentes';
+    const response = await axios.get(requestUrl);
+     
+    if (response.statusText!=="OK") {
+        throw new Error('Error ');
+      }
+      return response; 
+    }
+  
+    catch(error){
+     console.error(error.response);
+     throw error;
+ }
+}
+
+
 export async function obtenerSubestacion(id){  
   try {
     

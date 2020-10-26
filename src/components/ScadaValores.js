@@ -15,6 +15,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ExportarExcel from './ExportarExcel';
 import Loader from './Loader';
 import { getScadaValoresAction } from '../store/actions/scadaValoresActions';
+import { getPlantasAction } from '../store/actions/plantasActions';
+import { getFuentesAction } from '../store/actions/fuentesActions';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,16 +28,14 @@ const useStyles = makeStyles(theme => ({
   }));
   
 function ScadaValores(props){
-    const URL='http://192.168.0.14:5100/api/';
+
     const dispatch=useDispatch();
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
     const [fecha2,updateFecha2]=useState(null);
-    const [plantas,updatePlantas]=useState([]);
     const [columns,updateColumns]=useState([]);
     const [nombrePlanta,updateNombrePlanta]=useState("Todos");
-    const [fuentes,updateFuentes]=useState([]);
     const [idFuente,updateIdFuente]=useState(0);
     const [idZona,updateIdZona]=useState(0);
     const [idTension,updateIdTension]=useState(0);
@@ -43,9 +43,13 @@ function ScadaValores(props){
     const [loading,updateLoading]=useState(false);
     const error=useSelector(state=>state.scadaValores.error);
     const scadaValores=useSelector(state=>state.scadaValores.scadaValores);
-    const getScadaValores=(filtro,token,totales) =>dispatch(getScadaValoresAction(filtro,token,totales));
+    const fuentes=useSelector(state=>state.fuentes.fuentes);
+    const plantas=useSelector(state=>state.plantas.plantas);
     const user=useSelector(state=>state.user.user);
-
+    const getPlantas=() =>dispatch(getPlantasAction());
+    const getFuentes=() =>dispatch(getFuentesAction());    
+    const getScadaValores=(filtro,token,totales) =>dispatch(getScadaValoresAction(filtro,token,totales));
+   
     useEffect(()=>{
     
               
@@ -86,29 +90,20 @@ function ScadaValores(props){
         getFuentes();  
       }
     ,[]);
-
-    const getFuentes=    async function (){
-      const data2= await (axios.get(URL+'fuentes'));
-
-       updateFuentes(data2.data);
-       return data2.data;
-       
-    }
-
+    
+    // useEffect(()=>{
+    //     updateLoading(false);
+    //     console.log('prueba');
+    //     console.log(plantas);
+    //     console.log(fuentes);
+    // },[plantas,fuentes])
+  
     const wait=async(ms)=> {
         return new Promise(resolve => {
         setTimeout(resolve, ms);
         });
     }
 
-    const getPlantas=    async function (){
-       const data2= await (axios.get(URL+'plantas'));
-        
-        updatePlantas(data2.data);
-        return data2.data;
-        
-    }
-    
     const handleChange=async function(event){
         switch (event.target.name){
             case "zona":{
@@ -227,7 +222,7 @@ function ScadaValores(props){
                     <MenuItem value="Todos"key="Todos">
                     <em>Todas las plantas</em>
                     </MenuItem>
-                    {plantas ? plantas.map( planta=>
+                    {plantas.length>0 ? plantas.map( planta=>
                     <MenuItem key={planta.rotulacionSCADA} value={planta.nombre} >{planta.nombre}</MenuItem>
                         ):''}  
                 </Select>
@@ -246,7 +241,7 @@ function ScadaValores(props){
                     <MenuItem value="0"key="Todos">
                     <em>Todos los tipos</em>
                     </MenuItem>
-                    {fuentes ? fuentes.map( fuente=>
+                    {fuentes.length>0 ? fuentes.map( fuente=>
                     <MenuItem key={fuente.nombre} value={fuente.id} >{fuente.nombre}</MenuItem>
                         ):''}  
                 </Select>
