@@ -114,8 +114,7 @@ function SubestacionEditar(props){
       }
 
       const guardarCambios=async(subestacion)=>{
-      //  console.log('desde funcion');
-     //   console.log(archivo.ruta);
+
         await wait(300);
         console.log(subestacion);
         const respuesta=  editSubestacion(subestacion);

@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from 'react';
 import {useDispatch,useSelector} from 'react-redux';
 import MaterialTable  from  'material-table';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
-import axios from 'axios';
 import Menu from './Menu';
 import { Grid,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
@@ -51,13 +50,11 @@ function ScadaValores(props){
     const getScadaValores=(filtro,token,totales) =>dispatch(getScadaValoresAction(filtro,token,totales));
    
     useEffect(()=>{
-    
-              
+                  
       if (scadaValores.data&&(fecha1||fecha2)){
         const columns2=[
             { title: 'Fecha', field: 'fecha'},
             { title: 'Hora', field: 'hora' }
-           
         ];
 
        let plantas2=plantas.filter(p=>{
@@ -67,7 +64,7 @@ function ScadaValores(props){
         let data2=scadaValores;
         
             for (let item6 of plantas2){
-            // console.log(item6);
+
                 if (data2.data[0]) {
                     let existe = data2.data.filter(function (o) {
                         return o.hasOwnProperty(item6.nombre);
@@ -76,7 +73,7 @@ function ScadaValores(props){
                     if (existe ===true) columns2.push({ title: item6.nombre, field: item6.nombre,type:"numeric"});
                 } 
             }
-           console.log(columns2);
+
            if (data2.data.length>0) updateColumns(columns2);
             updateData(data2.data);
         }
@@ -91,13 +88,6 @@ function ScadaValores(props){
       }
     ,[]);
     
-    // useEffect(()=>{
-    //     updateLoading(false);
-    //     console.log('prueba');
-    //     console.log(plantas);
-    //     console.log(fuentes);
-    // },[plantas,fuentes])
-  
     const wait=async(ms)=> {
         return new Promise(resolve => {
         setTimeout(resolve, ms);
@@ -151,15 +141,13 @@ function ScadaValores(props){
           if (idFuente) filtro.idFuente=idFuente;
           if (idTension) filtro.idTension=idTension;
           if (idOrigen) filtro.idOrigen=idOrigen;
-   
-      
+         
         if (user.token)
         {
             getScadaValores(filtro,user.token,false);
         }
       else{
-        //data2=[];
-        props.history.push('/');
+           props.history.push('/');
       }
         
     }
@@ -167,18 +155,12 @@ function ScadaValores(props){
     return(
       <Fragment>
           <Menu></Menu>
-
           <h2 className="H2ComponenteConsulta">Generación Valores SCADA</h2>
-          
           <FormGroup className="RangoFechas">
-        
             <FormControl  className={classes.formControl,"Fecha"}>
-                
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
-                      
                         id="date-picker-dialog"
                         label="Fecha inicial"
                         format="dd/MM/yyyy"
@@ -190,34 +172,31 @@ function ScadaValores(props){
                     />
                     </MuiPickersUtilsProvider>
             </FormControl>
-            
-           
+                       
             <FormControl  className={classes.formControl,"Fecha"}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
- 
-                <KeyboardDatePicker
-                    margin="normal"
-                    id="date-picker-dialog"
-                    label="Fecha final"
-                    format="dd/MM/yyyy"
-                    value={fecha2}
-                    onChange={updateFecha2}
-                    KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                    }}
-                />
+                    <KeyboardDatePicker
+                        margin="normal"
+                        id="date-picker-dialog"
+                        label="Fecha final"
+                        format="dd/MM/yyyy"
+                        value={fecha2}
+                        onChange={updateFecha2}
+                        KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                        }}
+                    />
                 </MuiPickersUtilsProvider>
              </FormControl>       
           
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label" value="list">Planta</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label" value="list">Planta</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
                     value={nombrePlanta}
                     name="planta"
                     onChange={handleChange}
-                    
                 >
                     <MenuItem value="Todos"key="Todos">
                     <em>Todas las plantas</em>
@@ -227,16 +206,15 @@ function ScadaValores(props){
                         ):''}  
                 </Select>
              </FormControl>
+             
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label2" value="list">Tipo de Energia</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label2" value="list">Tipo de Energia</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label2"
                     id="demo-simple-select-helper2"
                     value={idFuente}
                     name="fuente"
                     onChange={handleChange} 
-                    
-                    
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todos los tipos</em>
@@ -248,15 +226,13 @@ function ScadaValores(props){
              </FormControl>
             
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label3" value="list">Zona</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label3" value="list">Zona</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
                     id="demo-simple-select-helper3"
                     value={idZona}
                     name="zona"
                     onChange={handleChange} 
-                    
-                    
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todas los zonas</em>
@@ -271,14 +247,13 @@ function ScadaValores(props){
              </FormControl>
 
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label3" value="list">Nivel de Tensión</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label3" value="list">Nivel de Tensión</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
                     id="demo-simple-select-helper3"
                     value={idTension}
                     name="tension"
                     onChange={handleChange} 
-                                        
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todos los niveles de tension</em>
@@ -286,21 +261,19 @@ function ScadaValores(props){
                         
                     <MenuItem key='ALTA' value='1' >ALTA</MenuItem>
                     <MenuItem key='MEDIA' value='2' >MEDIA</MenuItem>
-                    <MenuItem key='BAJA' value='3' >BAJA</MenuItem>
+                    <MenuItem key='BAJA' value=' 3' >BAJA</MenuItem>
 
                 </Select>
              </FormControl>
 
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label3" value="list">Origen</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label3" value="list">Origen</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
                     id="demo-simple-select-helper3"
                     value={idOrigen}
                     name="origen"
                     onChange={handleChange} 
-                    
-                    
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todos los tipos de origen</em>

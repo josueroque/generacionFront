@@ -7,7 +7,6 @@ import {
 
 import{consultar} from '../../Services/ApiService';
 
-
 export const getScadaValoresSuccess=scadaValores=>({
     type:GET_SCADAVALORES_SUCCESS,
     payload:scadaValores

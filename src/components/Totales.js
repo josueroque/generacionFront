@@ -1,20 +1,21 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import {MuiPickersUtilsProvider,KeyboardTimePicker,KeyboardDatePicker} from '@material-ui/pickers';
-import {useSelector} from 'react-redux';
-import axios from 'axios';
+import {useDispatch,useSelector} from 'react-redux';
+import MaterialTable  from  'material-table';
+import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import Menu from './Menu';
 import { Grid,FormControl } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
 import { Button} from '@material-ui/core'; 
-import { makeStyles,useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';  
-import { format } from 'date-fns';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExportarExcel from './ExportarExcel';
-import MaterialTable,{ MTableToolbar } from 'material-table';
 import Loader from './Loader';
+import { getScadaValoresAction } from '../store/actions/scadaValoresActions';
+import { getPlantasAction } from '../store/actions/plantasActions';
+import { getFuentesAction } from '../store/actions/fuentesActions';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,62 +26,59 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-
-
 function Totales(props){
-    //const URL='http://localhost:53363/api/';
-    const URL='http://192.168.0.14:5100/api/';
+
+    const dispatch=useDispatch();
     const classes = useStyles();
     const [data,updateData]=useState([]);
-    const [fechas,updateFechas]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
     const [fecha2,updateFecha2]=useState(null);
-    const [plantas,updatePlantas]=useState([]);
-    const [fuentes,updateFuentes]=useState([]);
     const [columns,updateColumns]=useState([]);
-    const [nombrePlanta,updateNombrePlanta]=useState('Todos');
+    const [nombrePlanta,updateNombrePlanta]=useState("Todos");
     const [idFuente,updateIdFuente]=useState(0);
     const [idZona,updateIdZona]=useState(0);
     const [idTension,updateIdTension]=useState(0);
     const [idOrigen,updateIdOrigen]=useState(0);
     const [loading,updateLoading]=useState(false);
+    const error=useSelector(state=>state.scadaValores.error);
+    const scadaValores=useSelector(state=>state.scadaValores.scadaValores);
+    const fuentes=useSelector(state=>state.fuentes.fuentes);
+    const plantas=useSelector(state=>state.plantas.plantas);
     const user=useSelector(state=>state.user.user);
-
-
+    const getPlantas=() =>dispatch(getPlantasAction());
+    const getFuentes=() =>dispatch(getFuentesAction());    
+    const getScadaValores=(filtro,token,totales) =>dispatch(getScadaValoresAction(filtro,token,totales));
 
     useEffect(()=>{
      
         getPlantas();
         getFuentes();   
-  
-  
+    
       }
       ,[]);
 
-    const setColumns= async function(){
-        const columns2=[
-            { title: 'Planta', field: 'nombre'  },
-            { title: 'Total', field: 'sum' }
-           
-        ];
-       
-    }
-
-    const getPlantas=    async function (){
-       const data2= await (axios.get(URL+'plantas'));
-
-        updatePlantas(data2.data);
-        return data2.data;
-        
-    }
-    const getFuentes=    async function (){
-        const data2= await (axios.get(URL+'fuentes'));
-
-         updateFuentes(data2.data);
-         return data2.data;
-         
-     }
+      useEffect(()=>{
+                 
+        if (scadaValores.data&&(fecha1||fecha2)){
     
+          let data2=scadaValores;
+          
+             if (data2.data.length>0) {  
+                    updateColumns( [{ title: 'Planta', field: 'nombre'  },
+                                    { title: 'Total', field: 'sum' },
+                                    { title: 'Fuente', field: 'fuente' },
+                                    { title: 'Tension', field: 'tension' },
+                                    { title: 'Zona', field: 'zona' },
+                                    { title: 'origen', field: 'origen' }
+                    ]);
+             }
+             updateData(data2.data);
+          
+            }
+          updateLoading(false);
+  
+      },[scadaValores])
+  
     const handleChange=async function(event){
 //console.log(event.target);
         switch (event.target.name){
@@ -124,192 +122,98 @@ function Totales(props){
         updateLoading(false);
 
     }
+   
     const getData=async function (){
-        let Fecha1= format(
-            new Date(fecha1),
-            'MM/dd/yyyy'
-          )
+        updateData([]);
 
-        let Fecha2= format(
-            new Date(fecha2),
-            'MM/dd/yyyy'
-          )
-
-        let urlFiltros=URL+'scadavalores/';
-    
-        if (fecha1){
-            urlFiltros+='filtro?totales=true&FechaInicial='+Fecha1;
+          let filtro={};  
+           
+          if (fecha1) filtro.fecha1=fecha1;
+          if (fecha2) filtro.fecha2=fecha2;
+          if (nombrePlanta) filtro.nombrePlanta=nombrePlanta;
+          if (idZona) filtro.idZona=idZona;
+          if (idFuente) filtro.idFuente=idFuente;
+          if (idTension) filtro.idTension=idTension;
+          if (idOrigen) filtro.idOrigen=idOrigen;
+   
+      
+        if (user.token)
+        {
+            getScadaValores(filtro,user.token,true);
         }
-        if (fecha2){
-           fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
-        }
-        if (nombrePlanta){
-          //  console.log(nombrePlanta);
-            if (nombrePlanta!=='Todos'){
-                if (fecha1 || fecha2){
-                    urlFiltros+='&NombrePlanta='+nombrePlanta;
-                }
-                else{
-                    urlFiltros+='filtro?totales=true&NombrePlanta='+nombrePlanta;
-                }
-            }
-        }
-        if (idZona){
-            //  console.log(nombrePlanta);
-              if (parseInt(idZona)!==0){
-                  if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')){
-                      urlFiltros+='&IdZona='+idZona;
-                  }
-                  else{
-                      urlFiltros+='filtro?totales=true&IdZona='+idZona;
-                  }
-              }
-          }
-
-          if (idFuente){
-
-              if (parseInt(idFuente)!==0){
-                  if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idZona!==0)){
-                      urlFiltros+='&IdFuente='+idFuente;
-                  }
-                  else{
-                      urlFiltros+='filtro?totales=true&IdFuente='+idFuente;
-                  }
-                  
-              }
-          }
-          if (idTension){
-
-            if (parseInt(idTension)!==0){
-                if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idTension!==0)){
-                    urlFiltros+='&IdTension='+idTension;
-                }
-                else{
-                    urlFiltros+='filtro?totales=true&IdTension='+idTension;
-                }
-                
-            }
-        }
+      else{
+        //data2=[];
+        props.history.push('/');
+      }
         
-        if (idOrigen){
-
-            if (parseInt(idOrigen)!==0){
-                if (fecha1 || fecha2 ||(nombrePlanta!=='Todos')||(idOrigen!==0)){
-                    urlFiltros+='&IdOrigen='+idOrigen;
-                }
-                else{
-                    urlFiltros+='filtro?totales=true&IdOrigen='+idOrigen;
-                }
-                
-            }
-        }
-
-       let data2;
-       if (user.token)
-       {
-          const config = {
-            headers: { 
-             
-              'Authorization': 'Bearer ' + user.token},
-          };
-           data2= await (axios.get(urlFiltros,config));
-        }
-        else{
-          data2=[];
-          props.history.push('/');
-        }
-        console.log(data2);
-       updateColumns( [{ title: 'Planta', field: 'nombre'  },
-                       { title: 'Total', field: 'sum' },
-                       { title: 'Fuente', field: 'fuente' },
-                       { title: 'Tension', field: 'tension' },
-                       { title: 'Zona', field: 'zona' },
-                       { title: 'origen', field: 'origen' }
-                    ]);
-
-    
-        updateData(data2.data);  
-        return data2;
-    }
-    
-
+    }    
  
     return(
       <Fragment>
           <Menu></Menu>
-
           <h2 className="H2ComponenteConsultaTotales">Totales Por Planta</h2>
-          
           <FormGroup className="RangoFechas">
-        
             <FormControl  className={classes.formControl,"Fecha"}>
-                
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    
-                    <KeyboardDatePicker
-                        margin="normal"
-                      
-                        id="date-picker-dialog"
-                        label="Fecha inicial"
-                        format="dd/MM/yyyy"
-                        value={fecha1}
-                        onChange={updateFecha1}
-                        KeyboardButtonProps={{
-                        'aria-label': 'change date',
-                        }}
-                    />
+                        <KeyboardDatePicker
+                            margin="normal"
+                            id="date-picker-dialog"
+                            label="Fecha inicial"
+                            format="dd/MM/yyyy"
+                            value={fecha1}
+                            onChange={updateFecha1}
+                            KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                            }}
+                        />
                     </MuiPickersUtilsProvider>
-            </FormControl>
-            
-           
-            <FormControl  className={classes.formControl,"Fecha"}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
- 
-                <KeyboardDatePicker
-                    margin="normal"
-                    id="date-picker-dialog"
-                    label="Fecha final"
-                    format="dd/MM/yyyy"
-                    value={fecha2}
-                    onChange={updateFecha2}
-                    KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                    }}
-                />
-                </MuiPickersUtilsProvider>
-             </FormControl>       
+                </FormControl>
+                      
+                <FormControl  className={classes.formControl,"Fecha"}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                            margin="normal"
+                            id="date-picker-dialog"
+                            label="Fecha final"
+                            format="dd/MM/yyyy"
+                            value={fecha2}
+                            onChange={updateFecha2}
+                            KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                </FormControl>       
              </FormGroup>
              <FormGroup className="ListaConsulta">
-             <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label" value="list">Planta</InputLabel>
-                <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={nombrePlanta}
-                    name="planta"
-                    onChange={handleChange}
-                   
+                <FormControl className={classes.formControl,"ListaConsultaItem"}>
+                    <InputLabel id="demo-simple-select-helper-label" value="list">Planta</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-helper-label"
+                        id="demo-simple-select-helper"
+                        value={nombrePlanta}
+                        name="planta"
+                        onChange={handleChange}
                     
-                >
-                    <MenuItem value="Todos" key="Todos">
-                    <em>Todas las plantas</em>
-                    </MenuItem>
-                    {plantas ? plantas.map( planta=>
-                    <MenuItem key={planta.rotulacionSCADA} value={planta.rotulacionSCADA} >{planta.rotulacionSCADA}</MenuItem>
-                        ):''}  
-                </Select>
-             </FormControl>
+                        
+                    >
+                        <MenuItem value="Todos" key="Todos">
+                        <em>Todas las plantas</em>
+                        </MenuItem>
+                        {plantas ? plantas.map( planta=>
+                        <MenuItem key={planta.rotulacionSCADA} value={planta.rotulacionSCADA} >{planta.rotulacionSCADA}</MenuItem>
+                            ):''}  
+                    </Select>
+                </FormControl>
             
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label2" value="list">Tipo de Energia</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label2" value="list">Tipo de Energia</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label2"
                     id="demo-simple-select-helper2"
                     value={idFuente}
                     name="fuente"
-                    onChange={handleChange} 
-                    
-                    
+                    onChange={handleChange}                                
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todas los tipos</em>
@@ -321,7 +225,7 @@ function Totales(props){
              </FormControl>
             
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label3" value="list">Zona</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label3" value="list">Zona</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
                     id="demo-simple-select-helper3"
@@ -344,15 +248,14 @@ function Totales(props){
              </FormControl>
 
              <FormControl className={classes.formControl,"ListaConsultaItem"}>
-             <InputLabel id="demo-simple-select-helper-label3" value="list">Nivel de Tensión</InputLabel>
+                <InputLabel id="demo-simple-select-helper-label3" value="list">Nivel de Tensión</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
                     id="demo-simple-select-helper3"
                     value={idTension}
                     name="tension"
                     onChange={handleChange} 
-                    
-                    
+                                       
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todos los niveles de tension</em>
@@ -373,8 +276,7 @@ function Totales(props){
                     value={idOrigen}
                     name="origen"
                     onChange={handleChange} 
-                    
-                    
+                     
                 >
                     <MenuItem value="0"key="Todos">
                     <em>Todos los tipos de origen</em>
@@ -419,8 +321,7 @@ function Totales(props){
                 :''}
             </div>
         }
-            
-   
+        
       </Fragment>
 
     );
