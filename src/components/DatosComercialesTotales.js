@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
   }));
 
 function DatosComercialesTotales(props){
-    const URL='http://localhost:53363/api/';
-    //const URL='http://192.168.0.14:5100/api/';
+   // const URL='http://localhost:53363/api/';
+    const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fechas,updateFechas]=useState([]);
@@ -215,7 +215,7 @@ function DatosComercialesTotales(props){
           data2=[];
           props.history.push('/');
         }
-        console.log(data2);
+        
        updateColumns( [{ title: 'Planta', field: 'nombrePlanta'  },
                        { title: 'Entregado', field: 'entregado' },
                        { title: 'Recibido', field: 'recibido' },

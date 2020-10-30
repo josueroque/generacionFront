@@ -34,7 +34,8 @@ export default function(state=initiaState,action){
             }
              
         default:
-            return {...state};
+          //  return {...state};
+          return state;  
        }           
     }
     

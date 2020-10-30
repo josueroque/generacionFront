@@ -80,7 +80,7 @@ function Totales(props){
       },[scadaValores])
   
     const handleChange=async function(event){
-//console.log(event.target);
+
         switch (event.target.name){
             case "zona":{
                 updateIdZona(event.target.value);
@@ -106,7 +106,7 @@ function Totales(props){
 
             }
         }
-       // updateNombrePlanta(event.target.value);
+  
     }
     const wait=async(ms)=> {
         return new Promise(resolve => {

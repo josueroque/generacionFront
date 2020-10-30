@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { format } from 'date-fns';
-export const URL='http://localhost:53363/api';
-//const URL='http://192.168.0.14:5100/api';
+//export const URL='http://localhost:53363/api';
+const URL='http://192.168.0.14:5100/api';
 
 export async function consultar(totales,scada,token,filtro ){  
   try {
@@ -99,7 +99,6 @@ export async function consultar(totales,scada,token,filtro ){
         'Authorization': 'Bearer ' + token},
     };
     
-    console.log(urlFiltros);
     const response= await (axios.get(urlFiltros,config));
      
     if (response.statusText!=="OK") {
@@ -118,7 +117,7 @@ export async function consultar(totales,scada,token,filtro ){
 
 export async function obtenerArchivoFecha(fecha,scada){  
     try {
-      console.log(fecha);
+      
       const requestUrl =URL +'/archivos/fecha?fecha='+fecha+'&scada='+scada;
       const response = await axios.get(requestUrl);
        
@@ -164,7 +163,7 @@ export async function obtenerArchivoFecha(fecha,scada){
            }
         };
       const response = await axios.delete(requestUrl,config);
-       console.log(response);
+       
       if (response.status!==200&&response.status!==204) {
           throw new Error('Error eliminando archivo');
         }
@@ -188,14 +187,12 @@ export const  guardarArchivo= async (archivo,token) =>{
          };
 
       const response = await axios.post(requestUrl,archivo,config);
-  //    console.log(response);
+
       return response;   
   
     } catch (err) {
       console.error(err);   
-      //console.log(error.response);
 
-      //throw(error);
      
     }
 }
@@ -289,7 +286,7 @@ export const  editarSubestacion= async (subestacion) =>{
   try {
     
      const requestUrl =URL +'/subestaciones/'+subestacion.id;
-     console.log(requestUrl);
+   
      const response = await axios.put(requestUrl,subestacion);
      return response;   
  
@@ -365,11 +362,9 @@ export const  resetPassword= async (user,NuevoPassword,token) =>{
     };
   
     const requestUrl =URL +'/cuentas/login/cambiar';
-    console.log(requestUrl);
-    console.log(user);
-    console.log(config);
+
     const response = await axios.post(requestUrl,{'email':user.email,'password':user.password},config);
-    console.log(response);
+  
     return response;   
 
   } catch (error) {
@@ -399,11 +394,8 @@ export async function saveUser(user){
 export async function loginUser(user){  
  try {
    
-    const requestUrl =URL +'/cuentas/login';
-
- console.log(requestUrl);
- console.log(user);   
- const response = await axios.post(requestUrl, user);
+  const requestUrl =URL +'/cuentas/login';
+  const response = await axios.post(requestUrl, user);
     if (response.statusText!=="OK") {
       throw new Error('Error saving user');
     }

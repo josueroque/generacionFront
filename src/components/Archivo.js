@@ -47,9 +47,8 @@ function Archivo(props){
 
     const user=useSelector(state=>state.user.user);
     useEffect(()=>{
-      console.log('hola');
-    //  actualizaScada(true);
-      },[])
+
+    },[])
 
       useEffect(()=>{
         if (fecha&&scada) obtenerArchivo(fecha);
@@ -87,7 +86,7 @@ function Archivo(props){
           new Date(fecha),
           'MM/dd/yyyy'
         )
-        console.log(scada);
+       
 
         const respuesta= getArchivo(fechaConFormato.toString(),scada);
         await wait(1000);
@@ -161,13 +160,12 @@ function Archivo(props){
             onSubmit={e=>{
               e.preventDefault();
 
-               console.log(archivo[0].name);
+             
                let dia=parseInt(archivo[0].name.substring(19,21));
                let mes=parseInt(archivo[0].name.substring(21,23));
                let año=parseInt(archivo[0].name.substring(23,25));
                let fechaValidacion= new Date(fecha );
-               console.log(fechaValidacion.getYear());
-               console.log(scada);
+
                if (scada===true)
                {
                   if(dia!==fechaValidacion.getDate()||mes!==(fechaValidacion.getMonth()+1)){
@@ -182,7 +180,7 @@ function Archivo(props){
                 updateFechaDiferente(false);
               
                }
-               console.log(fechaDiferente);
+             
               let archivoCreado={
                 ruta:archivo,
                 scada,
@@ -199,7 +197,6 @@ function Archivo(props){
               Archivo.append('SCADA',archivoCreado.scada);
               
             const respuesta=  guardarNuevo(Archivo);
-        //   console.log(respuesta);
 
             }}
           >

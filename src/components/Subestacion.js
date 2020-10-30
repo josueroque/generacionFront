@@ -46,9 +46,7 @@ function Subestacion(props){
     const [savedStatus,updateSavedStatus]=useState(false);
 
       const handleChange = (event) => {
-       // console.log(event.target.value);
-        //actualizaScada(event.target.value);
-        console.log(event.target.name);
+
         switch(event.target.name){
             case 'zona':
             {

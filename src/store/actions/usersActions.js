@@ -172,8 +172,7 @@ export  function  authUserAction  (user) {
          try {
              
             const response=await loginUser(user);
-            console.log(response.data);
-            console.log(user);
+
             if (response.statusText=== 'OK'){
                 user.token=response.data.token;
                 user.password='';
@@ -221,9 +220,9 @@ export  function  authUserAction  (user) {
     return async (dispatch)=>{
          dispatch(startResetPassword());
          try {
-        //    console.log(token);
+
             const response= await resetPassword (user,newPassword,token);
-            console.log(response);  
+
             dispatch(resetPasswordSuccess(user));
                
          } catch (error) {

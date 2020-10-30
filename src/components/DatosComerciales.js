@@ -25,8 +25,8 @@ const useStyles = makeStyles(theme => ({
   }));
   
 function DatosComerciales(props){
-   const URL='http://localhost:53363/api/';
-//  const URL='http://192.168.0.14:5100/api/';
+   //const URL='http://localhost:53363/api/';
+   const URL='http://192.168.0.14:5100/api/';
     const classes = useStyles();
     const [data,updateData]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
@@ -189,7 +189,7 @@ function DatosComerciales(props){
                   
               }
           }
-     console.log(urlFiltros);  
+  
      let data2;
      if (user.token)
      {
@@ -227,7 +227,6 @@ function DatosComerciales(props){
      
         return ;
     }
-    console.log(columns);
  
     return(
       <Fragment>

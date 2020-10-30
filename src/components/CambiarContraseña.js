@@ -65,7 +65,6 @@ export default function Cambiar(props) {
       const respuesta=  reset(loginUser,nueva,user.token);
       updateCambiar(true);   
       await wait(1000);
-    //  console.log(respuesta);
       return respuesta;
   }
   const wait=async(ms)=> {
@@ -90,8 +89,6 @@ export default function Cambiar(props) {
         <form className={classes.form} noValidate
                              onSubmit={e=>{
                                 e.preventDefault();
-                                console.log();
-                                console.log(nuevaConfirmacion);
                                 if (nueva!==nuevaConfirmacion)
                                 { 
                                   updateCambiar(true);
