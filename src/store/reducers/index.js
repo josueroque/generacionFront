@@ -5,8 +5,7 @@ import userReducer from './userReducer';
 import scadaValoresReducer from './scadaValoresReducer';
 import plantasReducer from './plantasReducer';
 import fuentesReducer from './fuentesReducer';
-
-//import validacionReducer from './validacionReducer';
+import curvaDemandaReducer from './curvaDemandaReducer';
 
 export default combineReducers({
     archivos: archivosReducer,
@@ -14,6 +13,7 @@ export default combineReducers({
     user:userReducer,
     scadaValores:scadaValoresReducer,
     plantas:plantasReducer,
-    fuentes:fuentesReducer
+    fuentes:fuentesReducer,
+    curvaDemanda:curvaDemandaReducer
 
 });

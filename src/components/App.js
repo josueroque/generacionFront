@@ -13,6 +13,7 @@ import Login from './Login';
 import Cambiar from './CambiarContraseña';
 import DatosComerciales from './DatosComerciales';
 import DatosComercialesTotales from './DatosComercialesTotales';
+import CurvaDemanda from './CurvaDemanda';
 
 class App  extends Component {
 
@@ -22,19 +23,19 @@ class App  extends Component {
         <Router>
       
           <Switch>
-
-            <Route exact path='/DatosComerciales' component={DatosComerciales}  />
-            <Route exact path='/DatosComercialesTotales' component={DatosComercialesTotales}  /> 
-                <Route exact path='/Totales' component={Totales}  /> 
-                <Route exact path='/ScadaValores' component={ScadaValores}  /> 
-               <Route exact path='/Archivo' component={Archivo}  />
-               <Route exact path='/Subestacion' component={Subestacion}  />
-               <Route exact path='/SubestacionEditar' component={SubestacionEditar}  />
-               <Route exact path='/Home' component={Home}  />
-               <Route exact path='/Cambiar' component={Cambiar}  /> 
-               <Route exact path='/Login' component={Login}  />  
-               <Route exact path='/Logout' component={Login}  />   
-               <Route exact path='/' component={Login}  />       
+              <Route exact path='/curvademanda' component={CurvaDemanda}  />
+              <Route exact path='/DatosComerciales' component={DatosComerciales}  />
+              <Route exact path='/DatosComercialesTotales' component={DatosComercialesTotales}  /> 
+              <Route exact path='/Totales' component={Totales}  /> 
+              <Route exact path='/ScadaValores' component={ScadaValores}  /> 
+              <Route exact path='/Archivo' component={Archivo}  />
+              <Route exact path='/Subestacion' component={Subestacion}  />
+              <Route exact path='/SubestacionEditar' component={SubestacionEditar}  />
+              <Route exact path='/Home' component={Home}  />
+              <Route exact path='/Cambiar' component={Cambiar}  /> 
+              <Route exact path='/Login' component={Login}  />  
+              <Route exact path='/Logout' component={Login}  />   
+              <Route exact path='/' component={Login}  />       
          
           </Switch>
           

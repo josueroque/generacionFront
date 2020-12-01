@@ -329,7 +329,14 @@ export default function Menu() {
                     <ListItemText primary="Totales Datos Comerciales" />
                   </ListItem>
                 </Link>
-
+                <Link key='Create10' to={{pathname:`curvademanda`}}  className='LinkMenu'>    
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                    <Power />
+                    </ListItemIcon>
+                    <ListItemText primary="Curva de Demanda" />
+                  </ListItem>
+                </Link>  
               </List>
             </Collapse>            
 
