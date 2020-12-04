@@ -12,6 +12,13 @@ code {
     monospace;
 }
 
+.Logo{
+  width: 35vw;
+  height: 18vw;
+  margin-left: 35vw;
+  margin-top: 5vw;
+}
+
 .H2Componente{
   /* color: blue; */
   margin-left: 40vw;
