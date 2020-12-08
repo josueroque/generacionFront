@@ -3,7 +3,7 @@ import {useDispatch,useSelector} from 'react-redux';
 import MaterialTable  from  'material-table';
 import {MuiPickersUtilsProvider,KeyboardDatePicker} from '@material-ui/pickers';
 import Menu from './Menu';
-import { Grid,FormControl } from '@material-ui/core';
+import { Grid,FormControl,FormLabel,RadioGroup,Radio,FormControlLabel } from '@material-ui/core';
 import { FormGroup } from '@material-ui/core';
 import { Button} from '@material-ui/core'; 
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +11,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import { format } from 'date-fns'; 
 import ExportarExcel from './ExportarExcel';
 import Loader from './Loader';
-import { getCurvaDemandaAction } from '../store/actions/curvaDemandaActions';
+import { getInadvertidoAction } from '../store/actions/inadvertidoActions';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -22,58 +23,100 @@ const useStyles = makeStyles(theme => ({
     },
   }));
   
-function CurvaDemanda(props){
+function Inadvertido(props){
 
     const dispatch=useDispatch();
     const classes = useStyles();
+    const [tipo, updateTipo] = useState('horaria');
     const [data,updateData]=useState([]);
     const [fecha1,updateFecha1]=useState(null);
     const [fecha2,updateFecha2]=useState(null);
     const [columns,updateColumns]=useState([]);
     const [loading,updateLoading]=useState(false);
     const error=useSelector(state=>state.inadvertido.error);
-    const curvaDemanda=useSelector(state=>state.curvaDemanda.curvaDemanda);
+    const inadvertido=useSelector(state=>state.inadvertido.inadvertido);
     const user=useSelector(state=>state.user.user);
-    const getCurvaDemanda=(filtro,token) =>dispatch(getCurvaDemandaAction(filtro,token));
+    const getInadvertido=(filtro,token) =>dispatch(getInadvertidoAction(filtro,token));
    
     useEffect(()=>{
                   
-      if (curvaDemanda.data&&(fecha1||fecha2)){
-        const columns2=[
+      if (inadvertido.data&&(fecha1||fecha2)){
+        let columns2=[
             { title: 'Fecha', field: 'fecha'},
             { title: 'Hora', field: 'hora' },
-            { title: 'Valor Máximo', field: 'valorMaximo' },
-            { title: 'Valor Minimo', field: 'valorMinimo' },
+            { title: 'Recibido', field: 'recibido' },
+            { title: 'Enviado', field: 'enviado' },
 
         ];
 
-        let data2=curvaDemanda;
+        let data2=inadvertido;
+      
+          if(data2.data.length>0){
+            data2.data.map(item=>{
+              let recibido=0;
+              let enviado=0;
+              item.fecha=format(new Date(item.fecha),'dd/MM/yyyy');
+              if (item.amm<0) recibido+=Math.abs(item.amm);
+              if (item.ut<0) recibido+=Math.abs(item.ut);
+              if (item.enatrel<0) recibido+=Math.abs(item.enatrel);
+              if (item.amm>0) enviado+=item.amm;
+              if (item.ut>0) enviado+=item.ut;
+              if (item.enatrel>0) enviado+=item.enatrel;
+              item.enviado=enviado.toFixed(3);
+              item.recibido=recibido.toFixed(3);
 
-        if(data2.data.length>0){
-          data2.data.map(item=>{
-            item.fecha=format(new Date(item.fecha),'dd/MM/yyyy')
-          });
+            });
+          }
+                
+        if(tipo==="diaria"){
+          columns2=[
+            { title: 'Fecha', field: 'fecha'},
+            { title: 'Recibido', field: 'recibido' },
+            { title: 'Enviado', field: 'enviado' },
+          ];       
+
+          let dataDiaria=[];
+          let fechaActual=new Date(fecha1);
+          let fechaFinal=new Date(fecha2);
+          while(fechaActual<=fechaFinal){
+            let enviadoDiario=0;
+            let recibidoDiario=0;
+            let lista= data2.data.filter(item=>{
+              return item.fecha===format(fechaActual,'dd/MM/yyyy'); 
+            });
+            lista.map(item=>{
+              if (item.amm<0) recibidoDiario+=Math.abs(item.amm);
+              if (item.ut<0) recibidoDiario+=Math.abs(item.ut);
+              if (item.enatrel<0) recibidoDiario+=Math.abs(item.enatrel);
+              if (item.amm>0) enviadoDiario+=item.amm;
+              if (item.ut>0) enviadoDiario+=item.ut;
+              if (item.enatrel>0) enviadoDiario+=item.enatrel;
+            })
+
+            let fila={fecha:format(new Date(fechaActual),'dd/MM/yyyy'),
+            enviado:enviadoDiario.toFixed(3),recibido:recibidoDiario.toFixed(3)};
+            dataDiaria.push(fila);
+            fechaActual.setDate(fechaActual.getDate()+1);
+          
+          }
+          updateData(dataDiaria);
+
+
         }
-
         if (data2.data.length>0) updateColumns(columns2);
-            updateData(data2.data);
+        if(tipo!=="diaria") updateData(data2.data);
+
       }
         
         updateLoading(false);
 
-    },[curvaDemanda])
-
-    useEffect(()=>{
-
-      }
-    ,[]);
+    },[inadvertido])
     
     const wait=async(ms)=> {
         return new Promise(resolve => {
         setTimeout(resolve, ms);
         });
     }
-
 
     const consultar=async()=>{
         updateLoading(true);
@@ -92,18 +135,30 @@ function CurvaDemanda(props){
          
         if (user.token)
         {
-            getCurvaDemanda(filtro,user.token);
+            getInadvertido(filtro,user.token);
         }
       else{
            props.history.push('/');
       }
         
     }
-     
+    const handleChange = (event) => {
+      updateTipo(event.target.value);
+    };
     return(
       <Fragment>
           <Menu></Menu>
-          <h2 className="H2ComponenteConsulta">Curva de Demanda</h2>
+          <h2 className="H2ComponenteConsulta">Inadvertido</h2>
+          <FormGroup >
+          <FormControl component="fieldset">
+            
+            <RadioGroup aria-label="tipoConsulta"  className="TipoConsulta" name="tipo1" value={tipo} onChange={handleChange}>
+                <h4>Tipo de Consulta</h4>
+                <FormControlLabel value="horaria" control={<Radio />} label="Horaria" className="RadioItem"/>
+                <FormControlLabel value="diaria" control={<Radio />} label="Diaria" className="RadioItem"/>
+              </RadioGroup>
+            </FormControl>
+            </FormGroup>
           <FormGroup className="RangoFechas">
             <FormControl  className={classes.formControl,"Fecha"}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -163,7 +218,8 @@ function CurvaDemanda(props){
                 title=""
                 options={{
                     exportButton: false,
-                    search:false
+                    search:false,
+                    pageSize:24
                   }}
                 />
               
@@ -178,4 +234,4 @@ function CurvaDemanda(props){
             
 };
 
-export default CurvaDemanda;
+export default Inadvertido;

@@ -87,6 +87,18 @@ margin-left: 25vw;
   grid-template-columns: 1fr 1fr !important;
   margin-left: 15vw;
 }
+.TipoConsulta{
+  margin-top: 6vw;
+  margin-bottom: -7vw !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr  !important;
+  margin-left: 15vw;
+  text-align: left;
+}
+
+.RadioItem{
+
+}
 
 .Fecha{
 
@@ -98,9 +110,10 @@ margin-left: 25vw;
 
 }
 .H2ComponenteConsulta{
- margin-left: 40vw;
-  margin-top: 7vw;
-  margin-bottom: -6vw;
+ margin-left: 43vw;
+  margin-top: 4vw;
+  margin-bottom: -5vw;
+  font-size: x-large;
 }
 
 .FormMantenimiento{

@@ -337,6 +337,14 @@ export default function Menu() {
                     <ListItemText primary="Curva de Demanda" />
                   </ListItem>
                 </Link>  
+                <Link key='Create11' to={{pathname:`inadvertido`}}  className='LinkMenu'>    
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                    <Power />
+                    </ListItemIcon>
+                    <ListItemText primary="Inadvertido" />
+                  </ListItem>
+                </Link>  
               </List>
             </Collapse>            
 

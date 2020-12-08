@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { format } from 'date-fns';
-//const URL='http://localhost:53363/api';
-const URL='http://192.168.0.14:5100/api';
+const URL='http://localhost:53363/api';
+//const URL='http://192.168.0.14:5100/api';
 
 export async function consultarCurvaDemanda(token,filtro ){  
   try {
@@ -19,6 +19,50 @@ export async function consultarCurvaDemanda(token,filtro ){
     let urlFiltros;
     
        urlFiltros=URL+'/curvademanda/';
+    
+    if (filtro.fecha1){
+        urlFiltros+='?FechaInicial='+Fecha1;
+    }
+    
+    if (filtro.fecha2){
+       filtro.fecha1?urlFiltros+='&FechaFinal='+Fecha2: urlFiltros+='filtro?FechaFinal='+Fecha2;
+    }
+    
+    const config = {
+        headers: {'Authorization': 'Bearer ' + token},
+    };
+    
+    const response= await (axios.get(urlFiltros,config));
+     
+    if (response.statusText!=="OK") {
+        throw new Error('Error getting data'); 
+     }
+      
+      return response; 
+    }
+  
+    catch(error){
+     console.error(error.response);
+     throw error;
+ }
+}
+
+export async function consultarInadvertido(token,filtro ){  
+  try {
+  
+    let Fecha1= format(
+      new Date(filtro.fecha1),
+      'MM/dd/yyyy'
+     )
+  
+    let Fecha2= format(
+      new Date(filtro.fecha2),
+      'MM/dd/yyyy'
+    )
+    
+    let urlFiltros;
+    
+       urlFiltros=URL+'/inadvertido/';
     
     if (filtro.fecha1){
         urlFiltros+='?FechaInicial='+Fecha1;

@@ -1,7 +1,5 @@
 import React,{Component} from 'react';
 import "../index.css";
-//import Home from './components/Home';
-//import Login from './components/Login';
 import Archivo from './Archivo';
 import ScadaValores from './ScadaValores';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -14,6 +12,7 @@ import Cambiar from './CambiarContraseña';
 import DatosComerciales from './DatosComerciales';
 import DatosComercialesTotales from './DatosComercialesTotales';
 import CurvaDemanda from './CurvaDemanda';
+import Inadvertido from './Inadvertido';
 
 class App  extends Component {
 
@@ -23,6 +22,7 @@ class App  extends Component {
         <Router>
       
           <Switch>
+              <Route exact path='/inadvertido' component={Inadvertido}  />            
               <Route exact path='/curvademanda' component={CurvaDemanda}  />
               <Route exact path='/DatosComerciales' component={DatosComerciales}  />
               <Route exact path='/DatosComercialesTotales' component={DatosComercialesTotales}  /> 
