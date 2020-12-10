@@ -32,7 +32,7 @@ code {
 .Lista{
   margin-left: 10vw !important ;
   margin-right: 40vw !important;
-  margin-bottom :1vw !important ;
+  margin-bottom :1vw !important;
 }
 
 .Boton{
@@ -44,7 +44,7 @@ code {
 }
 
 .Radio{
-  margin-left: 5vw !important ;
+  margin-left: 5vw !important;
   margin-bottom :1vw !important ;
 
 }
@@ -52,7 +52,6 @@ code {
 .Loader{
   margin-left: 40vw;
 }
-
 
 .LoaderLabel{
   margin-left: 35vw;
@@ -110,7 +109,7 @@ margin-left: 25vw;
 
 }
 .H2ComponenteConsulta{
- margin-left: 43vw;
+  margin-left: 38vw;
   margin-top: 4vw;
   margin-bottom: -5vw;
   font-size: x-large;
@@ -150,3 +149,10 @@ margin-left: 25vw;
   margin-left: 40vw;
   margin-bottom: -5vw;
 }
+
+.H2ComponenteConsultaInadvertido{
+  margin-left: 45vw;
+  margin-top: 6vw;
+  margin-bottom: -2vw;
+}
+

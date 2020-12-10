@@ -148,14 +148,14 @@ function Inadvertido(props){
     return(
       <Fragment>
           <Menu></Menu>
-          <h2 className="H2ComponenteConsulta">Inadvertido</h2>
+          <h2 className="H2ComponenteConsultaInadvertido">Inadvertido</h2>
           <FormGroup >
           <FormControl component="fieldset">
             
             <RadioGroup aria-label="tipoConsulta"  className="TipoConsulta" name="tipo1" value={tipo} onChange={handleChange}>
                 <h4>Tipo de Consulta</h4>
-                <FormControlLabel value="horaria" control={<Radio />} label="Horaria" className="RadioItem"/>
-                <FormControlLabel value="diaria" control={<Radio />} label="Diaria" className="RadioItem"/>
+                <FormControlLabel value="horaria" control={<Radio />} id="horaria" label="Horaria" className="RadioItem"/>
+                <FormControlLabel value="diaria" control={<Radio />} id="diaria" label="Diaria" className="RadioItem"/>
               </RadioGroup>
             </FormControl>
             </FormGroup>

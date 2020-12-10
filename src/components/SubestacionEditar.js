@@ -53,7 +53,7 @@ function SubestacionEditar(props){
 
     useEffect(()=>{
             getSubestaciones();
-           // getSubestacion(0);
+            getSubestacion(0);
         }
     ,[]);
 
@@ -61,7 +61,7 @@ function SubestacionEditar(props){
       actualizaZonaId(subestacion.zonaId);
       actualizaNombre(subestacion.nombre);
       actualizaNomenclatura(subestacion.nomenclatura);
-     // actualizaSubestacionId(subestacion.id);
+      actualizaSubestacionId(subestacion.id);
     },[subestacion])
 
       const handleChange = (event) => {

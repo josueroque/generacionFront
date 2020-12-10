@@ -99,10 +99,7 @@ export default function Login(props) {
                                             };
                                                                      
                                 const response=  authUser(loginUser);
-                            
-                                
-         
-        
+
                             } 
                          }
         

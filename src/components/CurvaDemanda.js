@@ -109,7 +109,7 @@ function CurvaDemanda(props){
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
-                        id="date-picker-dialog"
+                        id="date-picker-dialog1"
                         label="Fecha inicial"
                         format="dd/MM/yyyy"
                         value={fecha1}
@@ -125,7 +125,7 @@ function CurvaDemanda(props){
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
-                        id="date-picker-dialog"
+                        id="date-picker-dialog2"
                         label="Fecha final"
                         format="dd/MM/yyyy"
                         value={fecha2}

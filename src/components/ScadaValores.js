@@ -161,7 +161,7 @@ function ScadaValores(props){
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
-                        id="date-picker-dialog"
+                        id="date-picker-dialog1"
                         label="Fecha inicial"
                         format="dd/MM/yyyy"
                         value={fecha1}
@@ -177,7 +177,7 @@ function ScadaValores(props){
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
-                        id="date-picker-dialog"
+                        id="date-picker-dialog2"
                         label="Fecha final"
                         format="dd/MM/yyyy"
                         value={fecha2}
@@ -193,7 +193,7 @@ function ScadaValores(props){
                 <InputLabel id="demo-simple-select-helper-label" value="list">Planta</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
+                    id="listaPlantas"
                     value={nombrePlanta}
                     name="planta"
                     onChange={handleChange}
@@ -211,7 +211,7 @@ function ScadaValores(props){
                 <InputLabel id="demo-simple-select-helper-label2" value="list">Tipo de Energia</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label2"
-                    id="demo-simple-select-helper2"
+                    id="listaFuentes"
                     value={idFuente}
                     name="fuente"
                     onChange={handleChange} 
@@ -229,7 +229,7 @@ function ScadaValores(props){
                 <InputLabel id="demo-simple-select-helper-label3" value="list">Zona</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
-                    id="demo-simple-select-helper3"
+                    id="listaZonas"
                     value={idZona}
                     name="zona"
                     onChange={handleChange} 
@@ -250,7 +250,7 @@ function ScadaValores(props){
                 <InputLabel id="demo-simple-select-helper-label3" value="list">Nivel de Tensión</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
-                    id="demo-simple-select-helper3"
+                    id="listaNivelesTension"
                     value={idTension}
                     name="tension"
                     onChange={handleChange} 
@@ -270,7 +270,7 @@ function ScadaValores(props){
                 <InputLabel id="demo-simple-select-helper-label3" value="list">Origen</InputLabel>
                 <Select
                     labelId="demo-simple-select-helper-label3"
-                    id="demo-simple-select-helper3"
+                    id="listaOrigenes"
                     value={idOrigen}
                     name="origen"
                     onChange={handleChange} 
@@ -296,7 +296,7 @@ function ScadaValores(props){
         <Fragment>
             
         <Grid container justify="center" className="GridBotonConsulta">
-                <Button onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
+                <Button id="consultar" onClick={consultar} className="Boton" type="submit" variant="contained" color="primary">   Realizar Consulta  </Button>
                 <br/>
                 <ExportarExcel data={data} columns={columns} ></ExportarExcel>           
         </Grid>  

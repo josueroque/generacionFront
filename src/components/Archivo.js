@@ -206,7 +206,7 @@ function Archivo(props){
             <Grid container >
             <KeyboardDatePicker
                 margin="normal"
-                id="date-picker-dialog"
+                id="fecha"
                 label="Date picker dialog"
                 format="dd/MM/yyyy"
                 value={fecha}
@@ -229,8 +229,8 @@ function Archivo(props){
                 value={scada}
                 onChange={handleChange}
               >
-                <FormControlLabel  value = "true" control={<Radio color="primary" />} label="Valores SCADA" />
-                <FormControlLabel   value = "false" control={<Radio color="primary" />} label="Datos comerciales" />
+                <FormControlLabel  value = "true" control={<Radio id="scada" color="primary" />} label="Valores SCADA" />
+                <FormControlLabel   value = "false" control={<Radio id="comercial" color="primary" />} label="Datos comerciales" />
               </RadioGroup>
           </FormControl> 
 
@@ -253,8 +253,8 @@ function Archivo(props){
               </FormControl>
 
             <Grid container justify="center" className="GridBoton">
-                <Button disabled={guardarDesactivado} onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
-                <Button disabled={eliminarDesactivado} onClick={eliminarArchivo} className="Boton"  variant="contained" color="primary">    Eliminar Archivo  </Button>
+                <Button id="subirBoton" disabled={guardarDesactivado} onChange={tomarArchivo} className="Boton" type="submit" variant="contained" color="primary">    Subir Archivo  </Button>
+                <Button id="eliminarBoton" disabled={eliminarDesactivado} onClick={eliminarArchivo} className="Boton"  variant="contained" color="primary">    Eliminar Archivo  </Button>
                 <br/>
             </Grid>   
                <div>   

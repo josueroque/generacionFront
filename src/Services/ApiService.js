@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { format } from 'date-fns';
-const URL='http://localhost:53363/api';
-//const URL='http://192.168.0.14:5100/api';
+//const URL='http://localhost:53363/api';
+const URL='http://192.168.0.14:5100/api';
 
 export async function consultarCurvaDemanda(token,filtro ){  
   try {
